@@ -5,12 +5,12 @@ from telegram import *
 import telegram
 
 class ChatBot:
-    def __init__(self, bot_name, bot_key):
+    def __init__(self, bot_key):
         self.boys = []
         self.girls = []
         self.chat_pair = {}
 
-        self.bot_name, self.bot_key = bot_name, bot_key
+        self.bot_key = bot_name, bot_key
 
         # Calling  database
         self.record = DataBase()
@@ -498,7 +498,6 @@ class ChatBot:
 
 
 if __name__ == '__main__':
-    bot_name = "cintasatumalambot"
     bot_key = "5921989048:AAFSW9El44N5lcbVbBvhHeCeSM9eQsHqpNM"
 
-    ChatBot(bot_name, bot_key)
+    ChatBot(bot_key)
