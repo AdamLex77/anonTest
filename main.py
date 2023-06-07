@@ -59,9 +59,9 @@ class ChatBot:
             except telegram.error.Unauthorized:
                 pass
 
-    def check(user_id):
+    def check(context):
         for i in CHANNELS:
-            check = bot_key.get_chat_member(i, user_id)
+            check = bot_key.get_chat_member(i, context)
             if check.status != 'left':
                 pass
             else:
@@ -136,7 +136,7 @@ class ChatBot:
         chat_type = update.message.chat.type
 
         if chat_type == "private":
-            if not self.check(user_id):
+            if not self.check(context):
                 self.start(update, context)
             # Updating name & username
             self.record.update(user_id, {"name": name, "username": username})
