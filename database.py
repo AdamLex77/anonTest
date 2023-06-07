@@ -10,7 +10,7 @@ class DataBase:
 
     def connect(self):
         mongod = pymongo.MongoClient(
-            "mongodb+srv://lolot:<susuboneto123>@cluster0.44volcv.mongodb.net/?retryWrites=true&w=majority")
+            "mongodb+srv://cool:<susuboneto123>@cluster0.kbtznjt.mongodb.net/?retryWrites=true&w=majority")
 
         database = mongod["Telegram"]
 
