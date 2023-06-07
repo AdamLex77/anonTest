@@ -108,7 +108,7 @@ class ChatBot:
             except telegram.error.Unauthorized:
                 pass
 
-    def partner_selection(self, context, name, gender_list, opp_gender_list, user_id, gender1, gender2):
+    def partner_selection(self, context, name1, name2, gender_list, opp_gender_list, user_id, gender1, gender2):
         # precaution for same gender
         if gender1 == gender2:
             if gender_list[0] != user_id:
@@ -122,13 +122,12 @@ class ChatBot:
         gender_list.remove(user_id)
         opp_gender_list.remove(partner)
 
-        # updating chat pairs
-        self.record.update(user_id, {"name": name})
+        # updating chat pairs)
         self.chat_pair.update({user_id: partner})
         self.chat_pair.update({partner: user_id})
 
-        context.bot.send_message(chat_id=user_id, text=partner_match(gender1, name))
-        context.bot.send_message(chat_id=partner, text=partner_match(gender2, name))
+        context.bot.send_message(chat_id=user_id, text=partner_match(gender1, name1))
+        context.bot.send_message(chat_id=partner, text=partner_match(gender2, name2))
 
     def find_partner(self, update, context):
         user_id, name, username = self.common_args(update, context)
@@ -160,22 +159,22 @@ class ChatBot:
 
                         if partner_gender == "👸🏻 Girl":
                             if len(self.girls) >= 1:
-                                self.partner_selection(context, name=name, gender_list=self.boys, opp_gender_list=self.girls,
+                                self.partner_selection(context, name1=name, name2=name, gender_list=self.boys, opp_gender_list=self.girls,
                                                        user_id=user_id, gender1="Girl", gender2="Boy")
                             # if NO GIRL is available
                             elif len(self.boys) >= 2:
-                                self.partner_selection(context, name=name, gender_list=self.boys, opp_gender_list=self.boys,
+                                self.partner_selection(context, name1=name, name2=name, gender_list=self.boys, opp_gender_list=self.boys,
                                                        user_id=user_id, gender1="Boy", gender2="Boy")
                             else:
                                 context.bot.send_message(chat_id=user_id, text=partner_not_found())
 
                         elif partner_gender == "🤴🏻 Boy":
                             if len(self.boys) >= 2:
-                                self.partner_selection(context, name=name, gender_list=self.boys, opp_gender_list=self.boys,
+                                self.partner_selection(context, name1=name, name2=name, gender_list=self.boys, opp_gender_list=self.boys,
                                                        user_id=user_id, gender1="Boy", gender2="Boy")
                             # if NO BOY is available
                             elif len(self.girls) >= 1:
-                                self.partner_selection(context, name, gender_list=self.boys, opp_gender_list=self.girls,
+                                self.partner_selection(context, name1=name, name2=name, gender_list=self.boys, opp_gender_list=self.girls,
                                                        user_id=user_id, gender1="Girl", gender2="Boy")
                             else:
                                 context.bot.send_message(chat_id=user_id, text=partner_not_found())
