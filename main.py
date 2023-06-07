@@ -59,9 +59,9 @@ class ChatBot:
             except telegram.error.Unauthorized:
                 pass
 
-    def check(self):
+    def check(user_id):
         for i in CHANNELS:
-            check = bot_key.get_chat_member(i, self)
+            check = bot_key.get_chat_member(i, user_id)
             if check.status != 'left':
                 pass
             else:
