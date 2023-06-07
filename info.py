@@ -17,14 +17,13 @@ Commands
 """
 
 
-def partner_match(gender, name):
+def partner_match(gender):
     if gender == "Boy":
         partner = "🤴🏻 Boy"
     else:
         partner = "👸🏻 Girl"
 
-    return f"""Name: {name}
-Partner: {partner}
+    return f"""Partner: {partner}
 /next — find a new partner
 /stop — stop this dialog"""
 
