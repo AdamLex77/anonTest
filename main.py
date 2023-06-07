@@ -136,7 +136,8 @@ class ChatBot:
         chat_type = update.message.chat.type
 
         if chat_type == "private":
-            check_user = self.record.search(user_id)
+            if not self.check:
+                self.check(self)
             # Updating name & username
             self.record.update(user_id, {"name": name, "username": username})
 
