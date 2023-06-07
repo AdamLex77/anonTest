@@ -266,14 +266,11 @@ class ChatBot:
                 if user_id in self.chat_pair:
                     partner_id = self.chat_pair.get(user_id)
                     caption = update.message.caption
-
-                    msg = update.message.text
-
-                    if update.message.sticker:
+                    
+                    if update.message.text:
                         # Typing Action
                         context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.TYPING, timeout=1)
-                        context.bot.send_message(chat_id=partner_id, text=msg)
-
+                        context.bot.send_message(chat_id=partner_id, text=update.message.text)
 
                     if update.message.sticker:
                         # sticker send action
