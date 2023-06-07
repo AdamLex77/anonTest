@@ -1,15 +1,5 @@
 def welcome(name):
-    return f"""Hey {name}🖐\n
-Send me text, links, gifs, stickers, photos, videos or voice messages and I will anonymously forward them to your partner
-
-Commands
-/start - start the bot
-/help - show help guide
-/next — find a new partner
-/stop — stop the dialog
-/settings - settings menu
-/report - Report a message
-"""
+    return f"*Selamat Bergabung Di {name}🙊*\n\n_Semoga Dapat teman atau jodoh_\n\n*NOTE:*\nWAJIB JOIN\n[👥 ɢʀᴏᴜᴘ](t.me/onsbase_grub) | [ᴄʜᴀɴɴᴇʟ 1📣](t.me/onsbase) | [ᴄʜᴀɴɴᴇʟ 2📣](t.me/ratemyonspartner) | [ᴄʜᴀɴɴᴇʟ 3📣](t.me/menfesonsbase) | [📱ᴏᴡɴᴇʀ](t.me/nazhak)"
 
 
 def user_help():
