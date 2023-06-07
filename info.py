@@ -27,15 +27,13 @@ Commands
 """
 
 
-def partner_match(gender, name, age, domisili):
+def partner_match(gender, name):
     if gender == "Boy":
         partner = "🤴🏻 Boy"
     else:
         partner = "👸🏻 Girl"
 
     return f"""Name: {name}
-age: {age}
-Domisili : {domisili}
 Partner: {partner}
 /next — find a new partner
 /stop — stop this dialog"""
@@ -44,8 +42,6 @@ Partner: {partner}
 def partner_not_found():
     return """🔎 Searching for a partner"""
 
-def old_user():
-    return """How old are you"""
 
 def destroy(who=None):
     if who == "You":
