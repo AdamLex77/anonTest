@@ -124,7 +124,7 @@ class ChatBot:
 
 
     def settings(self, update, context):
-        user_id, name, username = self.common_args(update, context)
+        user_id = self.common_args(update, context)
 
         # chat type (group or private)
         chat_type = update.message.chat.type
