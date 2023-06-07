@@ -250,7 +250,7 @@ class ChatBot:
 
                     # Typing Action
                     context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.TYPING, timeout=1)
-                    context.bot.send_message(chat_id=partner_id, text=msg)
+                    context.bot.send_message(chat_id=partner_id, text=update.message.text)
 
             # if user stop the bot
             except telegram.error.Unauthorized:
@@ -272,12 +272,8 @@ class ChatBot:
                 else:
                     partner_id = self.chat_pair.get(user_id)
                     caption = update.message.caption
-                    if update.message.text:
-                        # sticker send action
-                        context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.TEXT, timeout=1)
-                        context.bot.send_message(chat_id=partner_id, text=update.message.text)
 
-                    elif update.message.sticker:
+                    if update.message.sticker:
                         # sticker send action
                         context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.CHOOSE_STICKER, timeout=1)
                         context.bot.send_sticker(chat_id=partner_id, sticker=update.message.sticker)
