@@ -254,17 +254,15 @@ class ChatBot:
 
         if chat_type == "private":
             try:
-                if user_id not in self.chat_pair:
-                    # Typing Action
-                    context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
-                    context.bot.send_message(chat_id=user_id, text=invalid_destroy())
-                else:
+                if user_id in self.chat_pair:
                     partner_id = self.chat_pair.get(user_id)
                     msg = update.message.text
-
-                    # Typing Action
-                    context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.TYPING, timeout=1)
-                    context.bot.send_message(chat_id=partner_id, text=msg)
+                    if update.message.text:
+                        # Typing Action
+                        context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.TYPING, timeout=1)
+                        context.bot.send_message(chat_id=partner_id, text=msg)
+                else: 
+                    invalid_destroy()
 
             # if user stop the bot
             except telegram.error.Unauthorized:
@@ -279,13 +277,13 @@ class ChatBot:
 
         if chat_type == "private":
             try:
-                if user_id not in self.chat_pair:
-                    # Typing Action
-                    context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
-                    context.bot.send_message(chat_id=user_id, text=invalid_destroy())
-                else:
+                if user_id in self.chat_pair:
                     partner_id = self.chat_pair.get(user_id)
                     caption = update.message.caption
+                    if update.message.text:
+                        # Typing Action
+                        context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.TYPING, timeout=1)
+                        context.bot.send_message(chat_id=partner_id, text=update.message.text)
 
                     if update.message.sticker:
                         # sticker send action
@@ -327,7 +325,8 @@ class ChatBot:
                         # document send action
                         context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.UPLOAD_DOCUMENT, timeout=1)
                         context.bot.send_document(chat_id=partner_id, document=update.message.document)
-
+                else:
+                    invalid_destroy()
             # if user stop the bot
             except telegram.error.Unauthorized:
                 self.end_conversation(update, context)
