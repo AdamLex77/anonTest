@@ -108,7 +108,8 @@ class ChatBot:
             except telegram.error.Unauthorized:
                 pass
 
-    def partner_selection(self, context, gender_list, opp_gender_list, user_id, gender1, gender2):
+    def partner_selection(self, context, update, gender_list, opp_gender_list, user_id, gender1, gender2):
+        user_id, name = self.common_args(update, context)
         # precaution for same gender
         if gender1 == gender2:
             if gender_list[0] != user_id:
