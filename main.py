@@ -132,7 +132,7 @@ class ChatBot:
     def find_partner(self, update, context):
         user_id, name, username = self.common_args(update, context)
         id = user_id
-        ah = self.chuck(context, id)
+
         # chat type (group or private)
         chat_type = update.message.chat.type
 
@@ -145,7 +145,8 @@ class ChatBot:
             data = self.record.search(user_id)
             my_gender = data.get("gender")
             partner_gender = data.get("partner_gender")
-
+            ah = self.chuck(context, id)
+            
             if ah == False:
                 self.start(update, context)
             if my_gender is None or partner_gender is None:
