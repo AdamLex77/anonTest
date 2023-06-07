@@ -109,7 +109,6 @@ class ChatBot:
                 pass
 
     def partner_selection(self, context, gender_list, opp_gender_list, user_id, gender1, gender2):
-        name = self.common_args(update, context)
         # precaution for same gender
         if gender1 == gender2:
             if gender_list[0] != user_id:
