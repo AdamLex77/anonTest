@@ -12,9 +12,9 @@ class DataBase:
         mongod = pymongo.MongoClient(
             "mongodb+srv://cool:<susuboneto123>@cluster0.kbtznjt.mongodb.net/?retryWrites=true&w=majority")
 
-        database = mongod["Telegram"]
+        database = mongod["TABLE"]
 
-        dataset = database["Annon"]
+        dataset = database["COLLECTIONS"]
 
         storage = gridfs.GridFS(database)
 
