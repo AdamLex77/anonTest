@@ -470,6 +470,6 @@ class ChatBot:
 
 if __name__ == '__main__':
     bot_name = "One Night Stand"
-    bot_key = "6252348567:AAH86gAM0vKKYZppyCWu-tMUnclCdoUqKA4"
+    bot_key = "6252348567:AAGH1trfi-TmGL3mtBgEyeTaqJgRv7_RGPo"
 
     ChatBot(bot_name, bot_key)
