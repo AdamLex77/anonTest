@@ -134,10 +134,15 @@ class ChatBot:
         user_id, name, username = self.common_args(update, context)
         id = user_id
         chat_type = update.message.chat.type
-        ah = self.chuck(context, id)
+
         if chat_type == "private":
-            if ah == False:
-                self.chuck(update, context)
+            for i in CHANNELS:
+                check = context.bot.get_chat_member(i, id)
+                if check.status != 'left':
+                    pass
+                else:
+                    return False
+            self.start(update, context)
             # Updating name & username
             self.record.update(user_id, {"name": name, "username": username})
 
