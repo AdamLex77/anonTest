@@ -499,6 +499,6 @@ class ChatBot:
 
 if __name__ == '__main__':
     bot_name = "cintasatumalamBot"
-    bot_key = "5921989048:AAG5aC_Ns0itF7rRfOhDQ0UpWsfXG3da8vE"
+    bot_key = "6252348567:AAH86gAM0vKKYZppyCWu-tMUnclCdoUqKA4"
 
     ChatBot(bot_name, bot_key)
