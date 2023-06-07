@@ -141,8 +141,7 @@ class ChatBot:
                 if check.status != 'left':
                     pass
                 else:
-                    return False
-            self.start(update, context)
+                    self.start(update, context)
             # Updating name & username
             self.record.update(user_id, {"name": name, "username": username})
 
