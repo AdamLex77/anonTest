@@ -125,6 +125,9 @@ class ChatBot:
         # updating chat pairs)
         self.chat_pair.update({user_id: partner})
         self.chat_pair.update({partner: user_id})
+        self.chat_pair.update({user_id: name1})
+        self.chat_pair.update({name2: user_id})
+
 
         context.bot.send_message(chat_id=user_id, text=partner_match(gender1, name1))
         context.bot.send_message(chat_id=partner, text=partner_match(gender2, name2))
