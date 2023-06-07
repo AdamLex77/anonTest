@@ -137,8 +137,6 @@ class ChatBot:
         ah = self.chuck(context, id)
 
         if chat_type == "private":
-            if ah == False:
-                 self.start(update, context)
             # Updating name & username
             self.record.update(user_id, {"name": name, "username": username})
 
@@ -146,7 +144,8 @@ class ChatBot:
             data = self.record.search(user_id)
             my_gender = data.get("gender")
             partner_gender = data.get("partner_gender")
-
+            if ah == False:
+                 return self.start(update, context)
             if my_gender is None or partner_gender is None:
                 self.settings(update, context)
             else:
