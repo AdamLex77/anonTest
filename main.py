@@ -161,22 +161,22 @@ class ChatBot:
 
                         if partner_gender == "👸🏻 Girl":
                             if len(self.girls) >= 1:
-                                self.partner_selection(context, gender_list=self.boys, opp_gender_list=self.girls,
+                                self.partner_selection(context, update, gender_list=self.boys, opp_gender_list=self.girls,
                                                        user_id=user_id, gender1="Girl", gender2="Boy")
                             # if NO GIRL is available
                             elif len(self.boys) >= 2:
-                                self.partner_selection(context, gender_list=self.boys, opp_gender_list=self.boys,
+                                self.partner_selection(context, update, gender_list=self.boys, opp_gender_list=self.boys,
                                                        user_id=user_id, gender1="Boy", gender2="Boy")
                             else:
                                 context.bot.send_message(chat_id=user_id, text=partner_not_found())
 
                         elif partner_gender == "🤴🏻 Boy":
                             if len(self.boys) >= 2:
-                                self.partner_selection(context, gender_list=self.boys, opp_gender_list=self.boys,
+                                self.partner_selection(context, update, gender_list=self.boys, opp_gender_list=self.boys,
                                                        user_id=user_id, gender1="Boy", gender2="Boy")
                             # if NO BOY is available
                             elif len(self.girls) >= 1:
-                                self.partner_selection(context, gender_list=self.boys, opp_gender_list=self.girls,
+                                self.partner_selection(context, update, gender_list=self.boys, opp_gender_list=self.girls,
                                                        user_id=user_id, gender1="Girl", gender2="Boy")
                             else:
                                 context.bot.send_message(chat_id=user_id, text=partner_not_found())
