@@ -5,6 +5,8 @@ from telegram import *
 import telegram
 import config
 
+CHANNELS = ["@onsbase", "@menfesonsbase", "@ratemyonspartner"]
+
 class ChatBot:
     def __init__(self, api_id, api_hash,bot_name, bot_key):
         self.boys = []
@@ -48,7 +50,7 @@ class ChatBot:
                 # Typing Action
                 context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
                 # User welcome
-                update.message.reply_text(text=welcome(name), parse_mode='Markdown')
+                update.message.reply_text(text=welcome(name), parse_mode='Markdown', disable_web_page_preview=True)
 
                 if check_user and not check_user.get('gender') and not check_user.get('partner_gender'):
                     self.settings(update, context)
@@ -118,6 +120,15 @@ class ChatBot:
 
         context.bot.send_message(chat_id=user_id, text=partner_match(gender1))
         context.bot.send_message(chat_id=partner, text=partner_match(gender2))
+
+    def check(self):
+        for i in CHANNELS:
+            check = bot_key.get_chat_member(i, self)
+            if check.status != 'left':
+                pass
+            else:
+                return False
+        return True
 
     def find_partner(self, update, context):
         user_id, name, username = self.common_args(update, context)
