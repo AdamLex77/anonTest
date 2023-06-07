@@ -23,20 +23,17 @@ class ChatBot:
             user_id = update.message.chat.id
             name = context.bot.get_chat(chat_id=user_id).title
             username = context.bot.get_chat(chat_id=user_id).username
-            age = 0
-            domisili = "biosfer"
 
         else:
             user_id = update.message.from_user.id
             name = update.message.from_user.first_name
             username = update.message.from_user.username
-            age = 0
-            domisili = "biosfer"
-        return user_id, name, username, age, domisili
+
+        return user_id, name, username
 
     def start(self, update, context):
-        user_id, name, username, age, domisili = self.common_args(update, context)
-        
+        user_id, name, username = self.common_args(update, context)
+
         # chat type (group or private)
         chat_type = update.message.chat.type
 
@@ -45,7 +42,7 @@ class ChatBot:
                 check_user = self.record.search(user_id)
                 if not check_user:
                     # record insertion
-                    self.record.insert(user_id, name, username, age, domisili)
+                    self.record.insert(user_id, name, username)
 
                 # Typing Action
                 context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
@@ -77,54 +74,8 @@ class ChatBot:
             except telegram.error.Unauthorized:
                 pass
 
-    def dom(self, update, context):
-        user_id, name, username = self.common_args(update, context)
-        domisili = self.common_args(domisili, context)
-
-        # chat type (group or private)
-        chat_type = update.message.chat.type
-
-        if chat_type == "private":
-            try:
-
-                # Typing Action
-                context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
-
-                # Typing Action
-                update.message.reply_text(chat_id=user_id, text=old_user())
-                return domisili
-            
-            
-            # if user stop the bot
-            except telegram.error.Unauthorized:
-                pass
-
-
-    def umur(self, update, context):
-        user_id, name, username = self.common_args(update, context)
-        age = self.common_args(age, context)
-
-        # chat type (group or private)
-        chat_type = update.message.chat.type
-
-        if chat_type == "private":
-            try:
-
-                # Typing Action
-                context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
-
-                # Typing Action
-                update.message.reply_text(chat_id=user_id, text=old_user())
-                return age
-            
-            
-            # if user stop the bot
-            except telegram.error.Unauthorized:
-                pass
-
-
     def settings(self, update, context):
-        user_id = self.common_args(update, context)
+        user_id, name, username = self.common_args(update, context)
 
         # chat type (group or private)
         chat_type = update.message.chat.type
@@ -519,6 +470,6 @@ class ChatBot:
 
 if __name__ == '__main__':
     bot_name = "One Night Stand"
-    bot_key = "6252348567:AAFMq6_v0UeGtNBf-iQtGURARI0ewcpLuaU"
+    bot_key = "6252348567:AAH86gAM0vKKYZppyCWu-tMUnclCdoUqKA4"
 
     ChatBot(bot_name, bot_key)
