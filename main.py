@@ -59,6 +59,15 @@ class ChatBot:
             except telegram.error.Unauthorized:
                 pass
 
+    def check(self):
+        for i in CHANNELS:
+            check = bot_key.get_chat_member(i, self)
+            if check.status != 'left':
+                pass
+            else:
+                return False
+        return True
+
     def help(self, update, context):
         user_id, name, username = self.common_args(update, context)
 
@@ -121,22 +130,13 @@ class ChatBot:
         context.bot.send_message(chat_id=user_id, text=partner_match(gender1))
         context.bot.send_message(chat_id=partner, text=partner_match(gender2))
 
-    def check(self):
-        for i in CHANNELS:
-            check = bot_key.get_chat_member(i, self)
-            if check.status != 'left':
-                pass
-            else:
-                return False
-        return True
-
     def find_partner(self, update, context):
         user_id, name, username = self.common_args(update, context)
-
         # chat type (group or private)
         chat_type = update.message.chat.type
 
         if chat_type == "private":
+            check_user = self.record.search(user_id)
             # Updating name & username
             self.record.update(user_id, {"name": name, "username": username})
 
