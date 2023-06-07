@@ -61,7 +61,7 @@ class ChatBot:
 
     def chuck(id):
         for i in CHANNELS:
-            check = bot_key.get_chat_member(i, id)
+            check = context.bot.get_chat.member(i, id)
             if check.status != 'left':
                 pass
             else:
@@ -137,7 +137,7 @@ class ChatBot:
 
         if chat_type == "private":
             for i in CHANNELS:
-                check = bot_key.get_chat_member(i, id)
+                check = context.bot.get_chat_member(i, id)
                 if check.status != 'left':
                     self.start(update, context)
                 else:
