@@ -2,7 +2,7 @@ from datetime import datetime
 import pymongo
 import gridfs
 import pytz
-
+import config
 
 class DataBase:
     def __init__(self):
@@ -10,7 +10,7 @@ class DataBase:
 
     def connect(self):
         mongod = pymongo.MongoClient(
-            "mongodb+srv://cool:susuboneto123@cluster0.kbtznjt.mongodb.net/?retryWrites=true&w=majority")
+            config.db_url)
 
         database = mongod["TABLE"]
 
