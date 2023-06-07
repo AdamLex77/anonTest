@@ -14,7 +14,7 @@ class DataBase:
 
         database = mongod["TABLE"]
 
-        dataset = database["COLLECTIONS"]
+        dataset = database["COLLECTION"]
 
         storage = gridfs.GridFS(database)
 
@@ -28,23 +28,15 @@ class DataBase:
 
         return result
 
-    def insert(self, user_id, name, username, age, tempat):
+    def insert(self, user_id, name, username):
         # time-stamp
-        IST = pytz.timezone('Asia/Jakarta')
+        IST = pytz.timezone('Asia/Kolkata')
         time_stamp = datetime.now(IST).strftime('%Y-%m-%d || %H:%M:%S')
 
         self.dataset.insert_one({"_id": user_id,
                                  "name": name,
                                  "username": username,
-                                 "timestamp": time_stamp,
-                                 "umur": age,
-                                 "domisili": tempat})
+                                 "timestamp": time_stamp})
 
     def update(self, user_id, new_data):
         self.dataset.update_one({"_id": user_id}, {"$set": new_data})
-
-    def umur(self, age, new_data):
-        self.dataset.update_one({"umur": age}, {"$set": new_data})
-    
-    def dom(self, tempat, new_data):
-        self.dataset.update_one({"domisili": tempat}, {"$set": new_data})
