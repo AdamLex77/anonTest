@@ -109,7 +109,7 @@ class ChatBot:
                 pass
 
     def partner_selection(self, context, gender_list, opp_gender_list, user_id, gender1, gender2):
-
+        name = self.common_args(update, context)
         # precaution for same gender
         if gender1 == gender2:
             if gender_list[0] != user_id:
@@ -124,9 +124,9 @@ class ChatBot:
         opp_gender_list.remove(partner)
 
         # updating chat pairs
+        self.record.update(user_id, {"name": name})
         self.chat_pair.update({user_id: partner})
         self.chat_pair.update({partner: user_id})
-        name = context.bot.get_chat(chat_id=user_id).title
 
         context.bot.send_message(chat_id=user_id, text=partner_match(gender1, name))
         context.bot.send_message(chat_id=partner, text=partner_match(gender2, name))
