@@ -243,10 +243,10 @@ class ChatBot:
                 if user_id in self.chat_pair:
                     partner_id = self.chat_pair.get(user_id)
                     msg = update.message.text
-
-                    # Typing Action
-                    context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.TYPING, timeout=1)
-                    context.bot.send_message(chat_id=partner_id, text=msg)
+                    if update.message.text:
+                        # Typing Action
+                        context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.TYPING, timeout=1)
+                        context.bot.send_message(chat_id=partner_id, text=msg)
                 else: 
                     invalid_destroy()
 
