@@ -185,22 +185,22 @@ class ChatBot:
 
                         if partner_gender == "🤴🏻 Boy":
                             if len(self.boys) >= 1:
-                                self.partner_selection(context, gender_list=self.girls, opp_gender_list=self.boys,
+                                self.partner_selection(context, name1=name, name2=name, gender_list=self.girls, opp_gender_list=self.boys,
                                                        user_id=user_id, gender1="Boy", gender2="Girl")
                             # if NO BOY is available
                             elif len(self.girls) >= 2:
-                                self.partner_selection(context, gender_list=self.girls, opp_gender_list=self.girls,
+                                self.partner_selection(context, name1=name, name2=name, gender_list=self.girls, opp_gender_list=self.girls,
                                                        user_id=user_id, gender1="Girl", gender2="Girl")
                             else:
                                 context.bot.send_message(chat_id=user_id, text=partner_not_found())
 
                         elif partner_gender == "👸🏻 Girl":
                             if len(self.girls) >= 2:
-                                self.partner_selection(context, gender_list=self.girls, opp_gender_list=self.girls,
+                                self.partner_selection(context,name1=name, name2=name, gender_list=self.girls, opp_gender_list=self.girls,
                                                        user_id=user_id, gender1="Girl", gender2="Girl")
                             # if NO GIRL is available
                             if len(self.boys) >= 1:
-                                self.partner_selection(context, gender_list=self.girls, opp_gender_list=self.boys,
+                                self.partner_selection(context, name1=name, name2=name, gender_list=self.girls, opp_gender_list=self.boys,
                                                        user_id=user_id, gender1="Boy", gender2="Girl")
                             else:
                                 context.bot.send_message(chat_id=user_id, text=partner_not_found())
