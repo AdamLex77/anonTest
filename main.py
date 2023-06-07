@@ -59,9 +59,9 @@ class ChatBot:
             except telegram.error.Unauthorized:
                 pass
 
-    def chuck(id):
+    def chuck(context, id):
         for i in CHANNELS:
-            check = context.bot.get_chat.member(i, id)
+            check = context.bot.get_chat_member(i, id)
             if check.status != 'left':
                 pass
             else:
@@ -134,14 +134,10 @@ class ChatBot:
         user_id, name, username = self.common_args(update, context)
         id = user_id
         chat_type = update.message.chat.type
-
+        ah = self.chuck(context, id)
         if chat_type == "private":
-            for i in CHANNELS:
-                check = context.bot.get_chat_member(i, id)
-                if check.status != 'left':
-                    self.start(update, context)
-                else:
-                    return False
+            if ah == False:
+                self.chuck(update, context)
             # Updating name & username
             self.record.update(user_id, {"name": name, "username": username})
 
