@@ -3,6 +3,7 @@ from info import *
 from telegram.ext import *
 from telegram import *
 import telegram
+import config
 
 class ChatBot:
     def __init__(self, api_id, api_hash, bot_name, bot_key):
