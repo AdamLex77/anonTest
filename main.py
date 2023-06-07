@@ -3,14 +3,15 @@ from info import *
 from telegram.ext import *
 from telegram import *
 import telegram
+import config
 
 class ChatBot:
-    def __init__(self, bot_name, bot_key):
+    def __init__(self, api_id, api_hash,bot_name, bot_key):
         self.boys = []
         self.girls = []
         self.chat_pair = {}
 
-        self.bot_name, self.bot_key = bot_name, bot_key
+        self.api_id, self.api_hash, self.bot_name, self.bot_key = api_id, api_hash,bot_name, bot_key
 
         # Calling  database
         self.record = DataBase()
@@ -23,16 +24,13 @@ class ChatBot:
             user_id = update.message.chat.id
             name = context.bot.get_chat(chat_id=user_id).title
             username = context.bot.get_chat(chat_id=user_id).username
-            age = 0
-            domisili = "biosfer"
+
         else:
             user_id = update.message.from_user.id
             name = update.message.from_user.first_name
             username = update.message.from_user.username
-            age = 0
-            domisili = "biosfer"
 
-        return user_id, name, username, age, domisili
+        return user_id, name, username
 
     def start(self, update, context):
         user_id, name, username = self.common_args(update, context)
@@ -55,24 +53,6 @@ class ChatBot:
                 if check_user and not check_user.get('gender') and not check_user.get('partner_gender'):
                     self.settings(update, context)
 
-            # if user stop the bot
-            except telegram.error.Unauthorized:
-                pass
-
-    def age(self, update, context):
-        user_id, name, username, age = self.common_args(update, context)
-
-        # chat type (group or private)
-        chat_type = update.message.chat.type
-
-        if chat_type == "private":
-            try:
-                # Typing Action
-                context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
-
-                # Help user
-                update.message.reply_text(text=old_user(), parse_mode='Markdown')
-                return age
             # if user stop the bot
             except telegram.error.Unauthorized:
                 pass
@@ -359,7 +339,6 @@ class ChatBot:
 
                 # normal flow
                 data = self.record.search(user_id)
-                
 
                 my_gender = data.get("gender")
                 partner_gender = data.get("partner_gender")
@@ -370,7 +349,7 @@ class ChatBot:
                 ])
 
                 query.edit_message_text(
-                    text=f"Edit your gender or your partner's gender\nname: {name}\nyou: {my_gender}\npartner: {partner_gender}",
+                    text=f"Edit your gender or your partner's gender\nyou: {my_gender}\npartner: {partner_gender}",
                     reply_markup=reply_markup)
 
             elif "SetMine" in query.data:
@@ -477,8 +456,6 @@ class ChatBot:
         dp.add_handler(CommandHandler("start", self.start, run_async=True))
         dp.add_handler(CommandHandler("help", self.help, run_async=True))
         dp.add_handler(CommandHandler("settings", self.settings, run_async=True))
-        dp.add_handler(CommandHandler("settings", self.age, run_async=True))
-        
 
         dp.add_handler(CommandHandler("next", self.find_partner, run_async=True))
         dp.add_handler(CommandHandler("stop", self.end_conversation, run_async=True))
@@ -494,6 +471,8 @@ class ChatBot:
 
 if __name__ == '__main__':
     bot_name = "One Night Stand"
-    bot_key = "6252348567:AAGH1trfi-TmGL3mtBgEyeTaqJgRv7_RGPo"
+    bot_key = config.bot_token
+    api_id = config.api_id
+    api_hash = config.api_hash
 
-    ChatBot(bot_name, bot_key)
+    ChatBot(api_id, api_hash, bot_name, bot_key)
