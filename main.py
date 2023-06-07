@@ -5,6 +5,8 @@ from telegram import *
 import telegram
 import config
 
+CHANNELS = ["@onsbase", "@menfesonsbase", "@ratemyonspartner"]
+
 class ChatBot:
     def __init__(self, api_id, api_hash, bot_name, bot_key):
         self.boys = []
@@ -55,6 +57,15 @@ class ChatBot:
             # if user stop the bot
             except telegram.error.Unauthorized:
                 pass
+
+    def chuck(context, id):
+        for i in CHANNELS:
+            check = context.bot.get_chat_member(i, id)
+            if check.status != 'left':
+                pass
+            else:
+                return False
+        return True
 
     def help(self, update, context):
         user_id, name, username = self.common_args(update, context)
@@ -120,12 +131,14 @@ class ChatBot:
 
     def find_partner(self, update, context):
         user_id, name, username = self.common_args(update, context)
-
+        id = user_id
+        ah = self.chuck(context, id)
         # chat type (group or private)
         chat_type = update.message.chat.type
 
         if chat_type == "private":
             # Updating name & username
+            
             self.record.update(user_id, {"name": name, "username": username})
 
             # user preference
@@ -133,6 +146,8 @@ class ChatBot:
             my_gender = data.get("gender")
             partner_gender = data.get("partner_gender")
 
+            if ah == False:
+                self.start(update, context)
             if my_gender is None or partner_gender is None:
                 self.settings(update, context)
             else:
@@ -266,7 +281,6 @@ class ChatBot:
                 if user_id in self.chat_pair:
                     partner_id = self.chat_pair.get(user_id)
                     caption = update.message.caption
-                    
                     if update.message.text:
                         # Typing Action
                         context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.TYPING, timeout=1)
