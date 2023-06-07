@@ -51,10 +51,7 @@ class ChatBot:
                 context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
                 # User welcome
                 update.message.reply_text(text=welcome(name), parse_mode='Markdown')
-                if update.age == 0:
-                    self.umur(update, context)
-                if update.domisili == 'biosfer':
-                    self.dom(update, context)
+
                 if check_user and not check_user.get('gender') and not check_user.get('partner_gender'):
                     self.settings(update, context)
 
@@ -521,7 +518,7 @@ class ChatBot:
 
 
 if __name__ == '__main__':
-    bot_name = "cintasatumalambot"
-    bot_key = "6252348567:AAFMq6_v0UeGtNBf-iQtGURARI0ewcpLuaU"
+    bot_name = "One Night Stand"
+    bot_key = "5921989048:AAHfhPzXLjEka0J6TLiegSjESP8KXFDt4XQ"
 
     ChatBot(bot_name, bot_key)
