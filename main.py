@@ -86,7 +86,7 @@ class ChatBot:
             except telegram.error.Unauthorized:
                 pass
 
-    def settings(self, update, context):
+    def age(self, update, context):
         user_id, name, username = self.common_args(update, context)
 
         # chat type (group or private)
@@ -124,7 +124,7 @@ class ChatBot:
             except telegram.error.Unauthorized:
                 pass
 
-    def gender_handler(self, update, context):
+    def settings(self, update, context):
         user_id, name, username = self.common_args(update, context)
 
         # chat type (group or private)
