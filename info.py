@@ -1,5 +1,5 @@
 def welcome(name):
-    return f"*Selamat Bergabung {name}🙊*\n\n_Semoga Dapat teman atau jodoh_\n\n/next untuk mencari partner, jangan lupa cek menu/garis 3 dipojok kiri bawah\n*NOTE:*\nWAJIB JOIN\n[👥 ɢʀᴏᴜᴘ](t.me/onsbase_grub) | [ᴄʜᴀɴɴᴇʟ 1📣](t.me/onsbase) | [ᴄʜᴀɴɴᴇʟ 2📣](t.me/ratemyonspartner) | [ᴄʜᴀɴɴᴇʟ 3📣](t.me/menfesonsbase) | [📱ᴏᴡɴᴇʀ](t.me/nazhak)"
+    return f"*Selamat Bergabung Di {name}🙊*\n\n_Semoga Dapat teman atau jodoh_\n\n*NOTE:*\nWAJIB JOIN\n[👥 ɢʀᴏᴜᴘ](t.me/onsbase_grub) | [ᴄʜᴀɴɴᴇʟ 1📣](t.me/onsbase) | [ᴄʜᴀɴɴᴇʟ 2📣](t.me/ratemyonspartner) | [ᴄʜᴀɴɴᴇʟ 3📣](t.me/menfesonsbase) | [📱ᴏᴡɴᴇʀ](t.me/nazhak)"
 
 
 def user_help():
@@ -16,6 +16,14 @@ Commands
 
 """
 
+def name_user():
+    return "your name?"
+
+def domisili_user():
+    return "where you from?"
+
+def wrong_name():
+    return "_Gunakan angka, Bukan Huruf!!_"
 
 def partner_match(gender):
     if gender == "Boy":
