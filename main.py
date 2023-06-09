@@ -86,6 +86,74 @@ class ChatBot:
             except telegram.error.Unauthorized:
                 pass
 
+    def age(self, message, context):
+        user_id, name, username = self.common_args(message, context)
+
+        # chat type (group or private)
+        chat_type = message.chat.type
+
+        if chat_type == "private":
+            try:
+    
+                # Typing Action
+                context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
+
+                context.bot.send_message(chat_id=user_id, text=age_user())
+                self.domisili(message, context)
+            # if user stop the bot
+            except telegram.error.Unauthorized:
+                pass
+
+    def domisili(self, message, context):
+        user_id, name, username = self.common_args(message, context)
+
+        # chat type (group or private)
+        chat_type = message.chat.type
+
+        if chat_type == "private":
+            try:
+                text = message.text
+                if not text.isdigit():
+                    context.bot.send_message(chat_id=user_id, text=wrong_name(), parse_mode="markdown")
+                    self.age(message, context)
+                    return
+                # Typing Action
+                context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
+
+                context.bot.send_message(chat_id=user_id, text=domisili_user())
+                new_data = {"old": {text}}
+                self.record.update(user_id, new_data)
+                self.gender(message, context)
+            # if user stop the bot
+            except telegram.error.Unauthorized:
+                pass
+
+    def domisili(self, message, context):
+        user_id, name, username = self.common_args(message, context)
+
+        # chat type (group or private)
+        chat_type = message.chat.type
+
+        if chat_type == "private":
+            try:
+                text = message.text
+                new_data = {"domisili": {text}}
+                self.record.update(user_id, new_data)
+
+                data = self.record.search(user_id)
+
+                my_gender = data.get("gender")
+                partner_gender = data.get("partner_gender")
+                my_old = data.get("old")
+                my_dom = data.get("domisili")
+                my_name = data.get("name")
+
+                message.reply_text(
+                    text=f"Your name: {my_name}\nyour age: {my_old}\nyour domisili: {my_dom}\n\nEdit your gender or your partner's gender\nyou: {my_gender}\npartner: {partner_gender}")
+
+            except telegram.error.Unauthorized:
+                pass
+
     def settings(self, update, context):
         user_id, name, username = self.common_args(update, context)
 
@@ -94,56 +162,6 @@ class ChatBot:
 
         if chat_type == "private":
             try:
-                updater = Updater(self.bot_key, use_context=True)
-                
-                dp = updater.dispatcher
-                # Typing Action
-                context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
-
-                context.bot.send_message(chat_id=user_id, text=age_user())
-                dp.add_handler(self.domisili(update, context))
-            # if user stop the bot
-            except telegram.error.Unauthorized:
-                pass
-
-    def domisili(self, update, context):
-        user_id, name, username = self.common_args(update, context)
-
-        # chat type (group or private)
-        chat_type = update.message.chat.type
-
-        if chat_type == "private":
-            try:
-                updater = Updater(self.bot_key, use_context=True)
-                
-                dp = updater.dispatcher
-                text = update.message.text
-                if not text.isdigit():
-                    context.bot.send_message(chat_id=user_id, text=wrong_name(), parse_mode="markdown")
-                    self.settings(update, context)
-                    return
-                # Typing Action
-                context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
-
-                context.bot.send_message(chat_id=user_id, text=domisili_user())
-                new_data = {"old": {text}}
-                self.record.update(user_id, new_data)
-                dp.add_handler(self.domisili(update, context))
-            # if user stop the bot
-            except telegram.error.Unauthorized:
-                pass
-
-    def gender(self, update, context):
-        user_id, name, username = self.common_args(update, context)
-
-        # chat type (group or private)
-        chat_type = update.message.chat.type
-
-        if chat_type == "private":
-            try:
-                text = update.message.text
-                new_data = {"domisili": {text}}
-                self.record.update(user_id, new_data)
                 # removing user previous state if present
                 if user_id in self.boys:
                     self.boys.remove(user_id)
