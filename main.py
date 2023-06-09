@@ -110,7 +110,7 @@ class ChatBot:
         chat_type = update.message.chat.type
 
         if chat_type == "private":
-            text = update.message.text.form.user_id
+            text = update.message.text
             try:
                 if not text.isdigit():
                     context.bot.send_message(chat_id=user_id, text=wrong_name(), parse_mode="markdown")
