@@ -101,12 +101,12 @@ class ChatBot:
                 context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
 
                 context.bot.send_message(chat_id=user_id, text=age_user())
-                dp.add_handler(self.domisili_handler)
+                dp.add_handler(self.domisili)
             # if user stop the bot
             except telegram.error.Unauthorized:
                 pass
 
-    def domisili_handler(self, update, context):
+    def domisili(self, update, context):
         user_id, name, username = self.common_args(update, context)
 
         # chat type (group or private)
@@ -128,12 +128,12 @@ class ChatBot:
                 context.bot.send_message(chat_id=user_id, text=domisili_user())
                 new_data = {"old": {text}}
                 self.record.update(user_id, new_data)
-                dp.add_handler(self.gender_handler)
+                dp.add_handler(self.gender, run_async=True)
             # if user stop the bot
             except telegram.error.Unauthorized:
                 pass
 
-    def gender_handler(self, update, context):
+    def gender(self, update, context):
         user_id, name, username = self.common_args(update, context)
 
         # chat type (group or private)
