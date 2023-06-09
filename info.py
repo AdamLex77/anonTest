@@ -16,8 +16,8 @@ Commands
 
 """
 
-def name_user():
-    return "your name?"
+def age_user():
+    return "your age?"
 
 def domisili_user():
     return "where you from?"
