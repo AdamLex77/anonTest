@@ -97,8 +97,7 @@ class ChatBot:
                 # Typing Action
                 context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
 
-                context.bot.send_message(chat_id=user_id, text=name_user)
-                self.domisili_handler(update, context)
+                context.bot.send_message(chat_id=user_id, text=name_user())
             # if user stop the bot
             except telegram.error.Unauthorized:
                 pass
@@ -112,13 +111,13 @@ class ChatBot:
         if chat_type == "private":
             text = update.message.text
             try:
+                if not text.isdigit():
+                    context.bot.send_message(chat_id=user_id, text=wrong_name(), parse_mode="markdown")
+                    self.settings(update, context)
                 # Typing Action
                 context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
 
-                context.bot.send_message(chat_id=user_id, text=domisili_user)
-                if not text.isdigit():
-                    context.bot.send_message(chat_id=user_id, text=wrong_name, parse_mode="markdown")
-                    self.settings(update, context)
+                context.bot.send_message(chat_id=user_id, text=domisili_user())
                 new_data = {"old": {text}}
                 self.record.update(user_id, new_data)
                 self.gender_handler(update, context)
