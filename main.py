@@ -132,9 +132,7 @@ class ChatBot:
 
         if chat_type == "private":
             try:
-                text = update.message.text
-                new_data = {"domisili": {text}}
-                self.record.update(user_id, new_data)
+
                 # removing user previous state if present
                 if user_id in self.boys:
                     self.boys.remove(user_id)
