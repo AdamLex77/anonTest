@@ -526,7 +526,9 @@ class ChatBot:
 
         dp.add_handler(CommandHandler("start", self.start, run_async=True))
         dp.add_handler(CommandHandler("help", self.help, run_async=True))
-        dp.add_handler(CommandHandler("settings", self.settings, run_async=True))
+        dp.add_handler(CommandHandler("setsex", self.settings, run_async=True))
+        dp.add_handler(CommandHandler("setinformation", self.age, run_async=True))
+
 
         dp.add_handler(CommandHandler("next", self.find_partner, run_async=True))
         dp.add_handler(CommandHandler("stop", self.end_conversation, run_async=True))
