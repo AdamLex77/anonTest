@@ -90,11 +90,10 @@ class ChatBot:
         user_id, name, username = self.common_args(update, message)
 
         # chat type (group or private)
-        chat_type = update.message.type
+        chat_type = update.message.chat.type
 
         if chat_type == "private":
             try:
-
                 update.message.reply_text(chat_id=user_id, text=age_user())
                 self.domisili(update, message)
             # if user stop the bot
@@ -102,10 +101,10 @@ class ChatBot:
                 pass
 
     def domisili(self, update, message):
-        user_id, name, username = self.common_args(message, message)
+        user_id, name, username = self.common_args(update, message)
 
         # chat type (group or private)
-        chat_type = message.chat.type
+        chat_type = update.message.chat.type
 
         if chat_type == "private":
             try:
