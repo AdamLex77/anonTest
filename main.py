@@ -103,8 +103,6 @@ class ChatBot:
                     context.bot.send_message(chat_id=user_id, text=wrong_name, parse_mode="markdown")
                     self.settings
                     return
-                new_data = {"old": {text}}
-                self.record.update(user_id, new_data)
                 self.domisili
             # if user stop the bot
             except telegram.error.Unauthorized:
@@ -123,7 +121,7 @@ class ChatBot:
                 context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
 
                 context.bot.send_message(chat_id=user_id, text=domisili_user)
-                new_data = {"domisili": {text}}
+                new_data = {"old": {text}}
                 self.record.update(user_id, new_data)
                 self.gender
             # if user stop the bot
@@ -138,6 +136,9 @@ class ChatBot:
 
         if chat_type == "private":
             try:
+                text = update.message.text
+                new_data = {"domisili": {text}}
+                self.record.update(user_id, new_data)
                 # removing user previous state if present
                 if user_id in self.boys:
                     self.boys.remove(user_id)
