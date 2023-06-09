@@ -98,8 +98,7 @@ class ChatBot:
                 context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
 
                 context.bot.send_message(chat_id=user_id, text=name_user)
-
-                self.domisili_handler
+                self.domisili_handler(update, context)
             # if user stop the bot
             except telegram.error.Unauthorized:
                 pass
@@ -119,10 +118,10 @@ class ChatBot:
                 context.bot.send_message(chat_id=user_id, text=domisili_user)
                 if not text.isdigit():
                     context.bot.send_message(chat_id=user_id, text=wrong_name, parse_mode="markdown")
-                    self.settings
+                    self.settings(update, context)
                 new_data = {"old": {text}}
                 self.record.update(user_id, new_data)
-                self.gender_handler
+                self.gender_handler(update, context)
             # if user stop the bot
             except telegram.error.Unauthorized:
                 pass
