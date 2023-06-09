@@ -93,16 +93,74 @@ class ChatBot:
         chat_type = update.message.chat.type
 
         if chat_type == "private":
+            text = update.message.text
             try:
                 # Typing Action
                 context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
 
+                context.bot.send_message(chat_id=user_id, text=name_user)
+                if not text.isdigit():
+                    context.bot.send_message(chat_id=user_id, text=wrong_name, parse_mode="markdown")
+                    self.settings
+                    return
+                new_data = {"old": {text}}
+                self.record.update(user_id, new_data)
+                self.domisili
+            # if user stop the bot
+            except telegram.error.Unauthorized:
+                pass
+
+    def domisili(self, update, context):
+        user_id, name, username = self.common_args(update, context)
+
+        # chat type (group or private)
+        chat_type = update.message.chat.type
+
+        if chat_type == "private":
+            text = update.message.text
+            try:
+                # Typing Action
+                context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
+
+                context.bot.send_message(chat_id=user_id, text=domisili_user)
+                new_data = {"domisili": {text}}
+                self.record.update(user_id, new_data)
+                self.gender
+            # if user stop the bot
+            except telegram.error.Unauthorized:
+                pass
+
+    def gender(self, update, context):
+        user_id, name, username = self.common_args(update, context)
+
+        # chat type (group or private)
+        chat_type = update.message.chat.type
+
+        if chat_type == "private":
+            try:
+                # removing user previous state if present
+                if user_id in self.boys:
+                    self.boys.remove(user_id)
+                elif user_id in self.girls:
+                    self.girls.remove(user_id)
+
+                # normal flow
+                data = self.record.search(user_id)
+
+                my_gender = data.get("gender")
+                partner_gender = data.get("partner_gender")
+                my_old = data.get("old")
+                my_dom = data.get("domisili")
+                my_name = data.get("name")
+
                 reply_markup = InlineKeyboardMarkup([
-                    [InlineKeyboardButton(text="🤴🏻 Gender 👸🏻", callback_data='SetGender')]
+                    [InlineKeyboardButton(text="👤 Your Gender", callback_data=f'SetMine')],
+                    [InlineKeyboardButton(text="🗣️ Partner's Gender", callback_data=f'SetPartner')],
                 ])
 
-                # User info
-                update.message.reply_text(text="🛠Settings", reply_markup=reply_markup)
+                update.message.reply_text(
+                    text=f"Your name: {my_name}\nyour age: {my_old}\nyour domisili: {my_dom}\n\nEdit your gender or your partner's gender\nyou: {my_gender}\npartner: {partner_gender}",
+                    reply_markup=reply_markup)
 
             # if user stop the bot
             except telegram.error.Unauthorized:
@@ -341,30 +399,7 @@ class ChatBot:
         chat_type = update.callback_query.message.chat.type
 
         if chat_type == "private":
-            if "SetGender" in query.data:
-
-                # removing user previous state if present
-                if user_id in self.boys:
-                    self.boys.remove(user_id)
-                elif user_id in self.girls:
-                    self.girls.remove(user_id)
-
-                # normal flow
-                data = self.record.search(user_id)
-
-                my_gender = data.get("gender")
-                partner_gender = data.get("partner_gender")
-
-                reply_markup = InlineKeyboardMarkup([
-                    [InlineKeyboardButton(text="👤 Your Gender", callback_data=f'SetMine')],
-                    [InlineKeyboardButton(text="🗣️ Partner's Gender", callback_data=f'SetPartner')],
-                ])
-
-                query.edit_message_text(
-                    text=f"Edit your gender or your partner's gender\nyou: {my_gender}\npartner: {partner_gender}",
-                    reply_markup=reply_markup)
-
-            elif "SetMine" in query.data:
+            if "SetMine" in query.data:
                 data = self.record.search(user_id)
 
                 my_gender = data.get("gender")
