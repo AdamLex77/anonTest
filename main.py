@@ -93,7 +93,6 @@ class ChatBot:
         chat_type = update.message.chat.type
 
         if chat_type == "private":
-            text = update.message.text
             try:
                 # Typing Action
                 context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
