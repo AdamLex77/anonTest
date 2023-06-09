@@ -90,19 +90,11 @@ class ChatBot:
         user_id, name, username = self.common_args(message, context)
 
         # chat type (group or private)
-        chat_type = message.chat.type
 
-        if chat_type == "private":
-            try:
-    
-                # Typing Action
-                context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
+        context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
 
-                context.bot.send_message(chat_id=user_id, text=age_user())
-                self.domisili(message, context)
-            # if user stop the bot
-            except telegram.error.Unauthorized:
-                pass
+        context.bot.send_message(chat_id=user_id, text=age_user())
+        self.domisili(message, context)
 
     def domisili(self, message, context):
         user_id, name, username = self.common_args(message, context)
@@ -527,7 +519,7 @@ class ChatBot:
         dp.add_handler(CommandHandler("start", self.start, run_async=True))
         dp.add_handler(CommandHandler("help", self.help, run_async=True))
         dp.add_handler(CommandHandler("setsex", self.settings, run_async=True))
-        dp.add_handler(CommandHandler("setinformation", self.age, run_async=True))
+        dp.add_handler(CommandHandler("setinfo", self.age, run_async=True))
 
 
         dp.add_handler(CommandHandler("next", self.find_partner, run_async=True))
