@@ -94,7 +94,7 @@ class ChatBot:
 
         if chat_type == "private":
             try:
-                update.message.reply_text(chat_id=user_id, text=age_user())
+                update.message.reply_text(text=age_user())
                 self.domisili(update, message)
             # if user stop the bot
             except telegram.error.Unauthorized:
@@ -110,11 +110,11 @@ class ChatBot:
             try:
                 text = message.text
                 if not text.isdigit():
-                    update.message.reply_text(chat_id=user_id, text=wrong_name(), parse_mode="markdown")
+                    update.message.reply_text(text=wrong_name(), parse_mode="markdown")
                     self.age(update, message)
                     return
 
-                update.message.reply_text(chat_id=user_id, text=domisili_user())
+                update.message.reply_text(text=domisili_user())
                 new_data = {"old": {text}}
                 self.record.update(user_id, new_data)
                 self.lol(update, message)
