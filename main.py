@@ -93,6 +93,7 @@ class ChatBot:
         chat_type = update.message.chat.type
 
         if chat_type == "private":
+            text = update.message.text
             try:
                 # Typing Action
                 context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
@@ -102,12 +103,12 @@ class ChatBot:
                     context.bot.send_message(chat_id=user_id, text=wrong_name, parse_mode="markdown")
                     self.settings
                     return
-                self.domisili
+                self.domisili_handler
             # if user stop the bot
             except telegram.error.Unauthorized:
                 pass
 
-    def domisili(self, update, context):
+    def domisili_handler(self, update, context):
         user_id, name, username = self.common_args(update, context)
 
         # chat type (group or private)
@@ -122,12 +123,12 @@ class ChatBot:
                 context.bot.send_message(chat_id=user_id, text=domisili_user)
                 new_data = {"old": {text}}
                 self.record.update(user_id, new_data)
-                self.gender
+                self.gender_handler
             # if user stop the bot
             except telegram.error.Unauthorized:
                 pass
 
-    def gender(self, update, context):
+    def gender_handler(self, update, context):
         user_id, name, username = self.common_args(update, context)
 
         # chat type (group or private)
