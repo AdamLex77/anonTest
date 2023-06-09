@@ -112,7 +112,7 @@ class ChatBot:
 
         if chat_type == "private":
             try:
-                text = update.message.from_user.id
+                text = update.message.text.from_user.id
                 if not text.isdigit():
                     context.bot.send_message(chat_id=user_id, text=wrong_name(), parse_mode="markdown")
                     self.settings(update, context)
@@ -136,7 +136,7 @@ class ChatBot:
 
         if chat_type == "private":
             try:
-                text = update.message.from_user.id
+                text = update.message.text.from_user.id
                 new_data = {"domisili": {text}}
                 self.record.update(user_id, new_data)
                 # removing user previous state if present
