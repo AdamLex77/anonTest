@@ -98,6 +98,7 @@ class ChatBot:
                 context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
 
                 context.bot.send_message(chat_id=user_id, text=name_user())
+                self.domisili_handler(update, context)
             # if user stop the bot
             except telegram.error.Unauthorized:
                 pass
