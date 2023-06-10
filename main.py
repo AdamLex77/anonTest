@@ -1,286 +1,483 @@
-# Copyright (C) 2020-2021 by kenkansaja@Github, < https://github.com/kenkansaja >.
-#
-# This file is part of < https://github.com/kenkansaja/Chatbot2 > project,
-# and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/kenkansaja/Chatbot2/blob/master/LICENSE >
-# https://t.me/pySmartDL
-#
-# All rights reserved.
-
-import telebot
-from telebot import types
-from database import *
-import os
-import time
-import pytz
-from datetime import datetime
-from config import GROUP, OWNER, CHANNEL, TOKEN, CHANNEL_2, CHANNEL_3
-
-
-bot = telebot.TeleBot(f'{TOKEN}')
+from database import DataBase
+from info import *
+from telegram.ext import *
+from telegram import *
+import telegram
+import config
+import helper
 
 CHANNELS = ["@onsbase", "@menfesonsbase", "@ratemyonspartner"]
 
-class User:  
-    def __init__(self, user_id):
-        self.user_id = user_id
-        self.name = None
-        self.age = None
-        self.sex = None
-        self.change = None
+class ChatBot:
+    def __init__(self, api_id, api_hash,bot_name, bot_key):
+        self.boys = []
+        self.girls = []
+        self.chat_pair = {}
 
+        self.api_id, self.api_hash, self.bot_name, self.bot_key = api_id, api_hash,bot_name, bot_key
 
-user_dict = {}
+        # Calling  database
+        self.record = DataBase()
 
-@bot.message_handler(content_types=['text'])
-def welcome(message):
-    if message.text != '/start':
-        if check_user(user_id=message.from_user.id)[0]:
-            mark = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-            mark.add('🔍 Cari Pasangan')
-            mark.add('📰 Info Profile', '🗑 Hapus Profile')
-            me = bot.get_me()
-            bot.send_message(message.from_user.id, f"*Selamat Bergabung Di {me.first_name}🙊*\n\n_Semoga Dapat teman atau jodoh_\n\n*NOTE:*\nWAJIB JOIN\n[👥 ɢʀᴏᴜᴘ](t.me/{GROUP}) | [ᴄʜᴀɴɴᴇʟ 1📣](t.me/{CHANNEL}) | [ᴄʜᴀɴɴᴇʟ 2📣](t.me/{CHANNEL_3}) | [ᴄʜᴀɴɴᴇʟ 3📣](t.me/{CHANNEL_2}) | [📱ᴏᴡɴᴇʀ](t.me/{OWNER})",parse_mode="markdown",disable_web_page_preview=True, reply_markup=mark)
-            bot.register_next_step_handler(message, search_prof)
+        # Bot command handler
+        self.command_handler()
+
+    def common_args(self, update, context):
+        if update.message.chat.type != "private":
+            user_id = update.message.chat.id
+            name = context.bot.get_chat(chat_id=user_id).title
+            username = context.bot.get_chat(chat_id=user_id).username
+
         else:
-            bot.send_message(message.from_user.id, "_👋Halo Pengguna Baru, Untuk Melanjutkan Isi Biodata Berikut!_",parse_mode="markdown")
-            bot.send_message(message.from_user.id, "➡️ *Nama Kamu :*", parse_mode="markdown")
-            bot.register_next_step_handler(message, reg_name)
-def text_reac(message):  
-    bot.send_message(message.chat.id, 'Tejadi Kesalahan\nSilahkan klik /start untuk mencoba lagi')
+            user_id = update.message.from_user.id
+            name = update.message.from_user.first_name
+            username = update.message.from_user.username
 
-def check(message):
-    for i in CHANNELS:
-        check = bot.get_chat_member(i, message)
-        if check.status != 'left':
-            pass
-        else:
-            return False
-    return True
+        return user_id, name, username
 
+    def start(self, update, context):
+        user_id, name, username = self.common_args(update, context)
 
-def reg_name(message):  
-    if message.text != '':
-        user = User(message.from_user.id)
-        user_dict[message.from_user.id] = user
-        user.name = message.text
-        bot.send_message(message.from_user.id, "*Umur :*", parse_mode="markdown")
-        bot.register_next_step_handler(message, reg_age)
+        # chat type (group or private)
+        chat_type = update.message.chat.type
 
-    else:
-        bot.send_message(message.from_user.id, "*Masukkan Nama Anda :*", parse_mode="markdown")
-        bot.register_next_step_handler(message, reg_name)
+        if chat_type == "private":
+            try:
+                check_user = self.record.search(user_id)
+                if not check_user:
+                    # record insertion
+                    self.record.insert(user_id, name, username)
 
+                # Typing Action
+                context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
+                # User welcome
+                update.message.reply_text(text=welcome(name), parse_mode='Markdown', disable_web_page_preview=True)
 
-def reg_age(message):  
-    age = message.text
-    if not age.isdigit():
-        msg = bot.reply_to(message, '_Gunakan angka, Bukan Huruf!!_', parse_mode="markdown")
-        bot.register_next_step_handler(msg, reg_age)
-        return
-    user = user_dict[message.from_user.id]
-    user.age = age
-    markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-    markup.add('Pria👦', 'Wanita👩🏻')
-    bot.send_message(message.from_user.id, '*Jenis Kelamin :*',parse_mode="markdown", reply_markup=markup)
-    bot.register_next_step_handler(message, reg_sex)
+                if check_user and not check_user.get('gender') and not check_user.get('partner_gender'):
+                    self.settings(update, context)
 
+            # if user stop the bot
+            except telegram.error.Unauthorized:
+                pass
 
-def reg_sex(message):  
-    sex = message.text
-    user = user_dict[message.from_user.id]
-    if (sex == 'Pria👦') or (sex == 'Wanita👩🏻'):
-        user.sex = sex
-        mark = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        mark.add('Pria👦', 'Wanita👩🏻', 'Pria dan Wanita👀')
-        bot.send_message(message.from_user.id, '*⏳Kamu ingin mencari pasangan :*',parse_mode="markdown", reply_markup=mark)
-        bot.register_next_step_handler(message, reg_change)
-
-    else:
-        bot.send_message(message.from_user.id, '_Silahkan Klik Yang ada dikeyboard!_',parse_mode="markdown")
-        bot.register_next_step_handler(message, reg_sex)
-
-
-def reg_change(message):  
-    if (message.text == 'Pria👦') or (message.text == 'Wanita👩🏻') or (message.text == 'Pria dan Wanita👀'):
-        user = user_dict[message.from_user.id]
-        user.change = message.text
-        date1 = datetime.fromtimestamp(message.date, tz=pytz.timezone("asia/jakarta")).strftime("%d/%m/%Y %H:%M:%S").split()
-        bot.send_message(message.from_user.id,
-                         "🐱 - _BIODATA KAMU_ - 🐱\n\n*=> Nama :* " + str(user.name) + "\n*=> Umur :* " + str(user.age)+" Tahun" + "\n*=> Jenis Kelamin :* " + str(user.sex) + "\n*=> Tipe Pasangan :* " + str(user.change)+ "\n*=> Tedaftar Pada :\n        >Tanggal :* "+str(date1[0])+"\n    *    >Waktu :* "+str(date1[1])+" WIB", parse_mode="markdown")
-        markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        markup.add('Iya ✔️', 'Tidak ✖️')
-        bot.send_message(message.from_user.id, "`Ingin Merubah Data diatas??`",parse_mode="markdown", reply_markup=markup)
-        bot.register_next_step_handler(message, reg_accept)
-    else:
-        bot.send_message(message.from_user.id, 'Hanya Boleh Click Yang ada dikeyboard')
-        bot.register_next_step_handler(message, reg_change)
-
-
-def reg_accept(message):  
-    if (message.text == 'Iya ✔️') or (message.text == 'Tidak ✖️'):
-        if message.text == 'Iya ✔️':
-            tw = types.ReplyKeyboardRemove()
-            bot.send_message(message.from_user.id, "*Masukkan Kembali🕹\nNama Kamu :*", parse_mode="markdown", reply_markup=tw)
-            bot.register_next_step_handler(message, reg_name)
-        else:
-            if not check_user(user_id=message.from_user.id)[0]:
-                user = user_dict[message.from_user.id]
-                reg_db(user_id=user.user_id, name=user.name, old=user.age, gender=user.sex, change=user.change)
-                bot.send_message(message.from_user.id, "_Berhasil...✅\nAccount Kamu Telah Terdaftar!_", parse_mode="markdown")
+    def chuck(self, context, id):
+        for i in CHANNELS:
+            check = context.bot.get_chat_member(i, id)
+            if check.status != 'left':
+                pass
             else:
-                if message.from_user.id in user_dict.keys():
-                    user = user_dict[message.from_user.id]
-                    edit_db(user_id=user.user_id, name=user.name, old=user.age, gender=user.sex, change=user.change)
-            welcome(message)
+                return False
+        return True
 
+    def help(self, update, context):
+        user_id, name, username = self.common_args(update, context)
 
-def search_prof(message):  
-    ch = check(message.chat.id)
-    if ch == True:
-        if (message.text == u'🔍 Cari Pasangan') or (message.text == u'📰 Info Profile') or (
-                message.text == u'🗑 Hapus Profile'):
-            if message.text == u'🔍 Cari Pasangan':
-               bot.send_message(message.from_user.id, '🚀 Sedang mencari pasangan untukmu . . .')
-               search_partner(message)
-            elif message.text == u'📰 Info Profile':
-                user_info = get_info(user_id=message.from_user.id)
-                bot.send_message(message.from_user.id,
-                                 "📍Data Profile📍\n\n*Nama :* " + str(user_info[2]) +"\n*ID :* `"+str(message.from_user.id)+"`" +"\n*Umur :* " + str(
-                                     user_info[3]) +" Tahun" + "\n*Jenis Kelamin :* " + str(user_info[4]) + "\n*Tipe Pasangan :* " + str(user_info[5]),parse_mode="markdown")
-                mark = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-                mark.add('Iya ✔️', 'Tidak ✖️')
-                bot.send_message(message.from_user.id, '_Ingin Merubah Data Profil Kamu??_',parse_mode="markdown", reply_markup=mark)
-                bot.register_next_step_handler(message, reg_accept)
+        # chat type (group or private)
+        chat_type = update.message.chat.type
+
+        if chat_type == "private":
+            try:
+                # Typing Action
+                context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
+
+                # Help user
+                update.message.reply_text(text=user_help(), parse_mode='Markdown')
+
+            # if user stop the bot
+            except telegram.error.Unauthorized:
+                pass
+
+    def settings(self, update, context):
+        user_id, name, username = self.common_args(update, context)
+
+        # chat type (group or private)
+        chat_type = update.message.chat.type
+
+        if chat_type == "private":
+            try:
+                # removing user previous state if present
+                if user_id in self.boys:
+                    self.boys.remove(user_id)
+                elif user_id in self.girls:
+                    self.girls.remove(user_id)
+
+                # normal flow
+                data = self.record.search(user_id)
+
+                my_gender = data.get("gender")
+                partner_gender = data.get("partner_gender")
+                my_old = data.get("old")
+                my_dom = data.get("domisili")
+                my_name = data.get("name")
+
+                reply_markup = InlineKeyboardMarkup([
+                    [InlineKeyboardButton(text="👤 Your Gender", callback_data=f'SetMine')],
+                    [InlineKeyboardButton(text="🗣️ Partner's Gender", callback_data=f'SetPartner')],
+                ])
+
+                update.message.reply_text(
+                    text=f"Your name: {my_name}\nyour age: {my_old}\nyour domisili: {my_dom}\n\nEdit your gender or your partner's gender\nyou: {my_gender}\npartner: {partner_gender}",
+                    reply_markup=reply_markup)
+
+            # if user stop the bot
+            except telegram.error.Unauthorized:
+                pass
+
+    def partner_selection(self, context, gender_list, opp_gender_list, user_id, gender1, gender2):
+
+        # precaution for same gender
+        if gender1 == gender2:
+            if gender_list[0] != user_id:
+                partner = gender_list[0]
             else:
-                delete_user(user_id=message.from_user.id)
-                tw = types.ReplyKeyboardRemove()
-                bot.send_message(message.from_user.id, '_Tunggu Sebentar..Sedang Menghapus Profile❗️_', parse_mode="markdown")
-                bot.send_message(message.from_user.id, '_Berhasil..Profile Kamu Di Hapus✅_', parse_mode="markdown", reply_markup=tw)
-                welcome(message)
+                partner = gender_list[1]
         else:
-            bot.send_message(message.from_user.id, 'Klik Yang ada dikeyboard')
-            bot.register_next_step_handler(message, search_prof)
-    else:
-        bot.register_next_step_handler(message, welcome)
-def search_partner(message): 
-   try:
-    is_open = check_open(first_id=message.from_user.id)
-    if is_open[0][0]:  
-        bot.register_next_step_handler(message, chat)
+            partner = opp_gender_list[0]
 
-    else:
-        select = select_free()
-        success = False
-        if not select:
-            add_user(first_id=message.from_user.id)
-        else:
-            for sel in select:
-                if check_status(first_id=message.from_user.id, second_id=sel[0]) or message.from_user.id == sel[0]:
-                    print(message.from_user.id, 'Bergabung')
-                    continue
+        # updating user list
+        gender_list.remove(user_id)
+        opp_gender_list.remove(partner)
 
+        # updating chat pairs
+        self.chat_pair.update({user_id: partner})
+        self.chat_pair.update({partner: user_id})
+
+        context.bot.send_message(chat_id=user_id, text=partner_match(gender1))
+        context.bot.send_message(chat_id=partner, text=partner_match(gender2))
+
+    def find_partner(self, update, context):
+        user_id, name, username = self.common_args(update, context)
+        id = user_id
+        chat_type = update.message.chat.type
+        ah = self.chuck(context, id)
+
+        if chat_type == "private":
+            if ah == False:
+                 self.start(update, context)
+            # Updating name & username
+            self.record.update(user_id, {"name": name, "username": username})
+
+            # user preference
+            data = self.record.search(user_id)
+            my_gender = data.get("gender")
+            partner_gender = data.get("partner_gender")
+
+            if my_gender is None or partner_gender is None:
+                self.settings(update, context)
+            else:
+                try:
+                    # ending previous dialog if any
+                    if user_id in self.chat_pair:
+                        self.end_conversation(update, context)
+
+                    if my_gender == "🤴🏻 Boy":
+                        if user_id not in self.boys:
+                            self.boys.append(user_id)
+
+                        if partner_gender == "👸🏻 Girl":
+                            if len(self.girls) >= 1:
+                                self.partner_selection(context, gender_list=self.boys, opp_gender_list=self.girls,
+                                                       user_id=user_id, gender1="Girl", gender2="Boy")
+                            # if NO GIRL is available
+                            elif len(self.boys) >= 2:
+                                self.partner_selection(context, gender_list=self.boys, opp_gender_list=self.boys,
+                                                       user_id=user_id, gender1="Boy", gender2="Boy")
+                            else:
+                                context.bot.send_message(chat_id=user_id, text=partner_not_found())
+
+                        elif partner_gender == "🤴🏻 Boy":
+                            if len(self.boys) >= 2:
+                                self.partner_selection(context, gender_list=self.boys, opp_gender_list=self.boys,
+                                                       user_id=user_id, gender1="Boy", gender2="Boy")
+                            # if NO BOY is available
+                            elif len(self.girls) >= 1:
+                                self.partner_selection(context, gender_list=self.boys, opp_gender_list=self.girls,
+                                                       user_id=user_id, gender1="Girl", gender2="Boy")
+                            else:
+                                context.bot.send_message(chat_id=user_id, text=partner_not_found())
+
+                    elif my_gender == "👸🏻 Girl":
+                        if user_id not in self.girls:
+                            self.girls.append(user_id)
+
+                        if partner_gender == "🤴🏻 Boy":
+                            if len(self.boys) >= 1:
+                                self.partner_selection(context, gender_list=self.girls, opp_gender_list=self.boys,
+                                                       user_id=user_id, gender1="Boy", gender2="Girl")
+                            # if NO BOY is available
+                            elif len(self.girls) >= 2:
+                                self.partner_selection(context, gender_list=self.girls, opp_gender_list=self.girls,
+                                                       user_id=user_id, gender1="Girl", gender2="Girl")
+                            else:
+                                context.bot.send_message(chat_id=user_id, text=partner_not_found())
+
+                        elif partner_gender == "👸🏻 Girl":
+                            if len(self.girls) >= 2:
+                                self.partner_selection(context, gender_list=self.girls, opp_gender_list=self.girls,
+                                                       user_id=user_id, gender1="Girl", gender2="Girl")
+                            # if NO GIRL is available
+                            if len(self.boys) >= 1:
+                                self.partner_selection(context, gender_list=self.girls, opp_gender_list=self.boys,
+                                                       user_id=user_id, gender1="Boy", gender2="Girl")
+                            else:
+                                context.bot.send_message(chat_id=user_id, text=partner_not_found())
+
+                # if user stop the bot
+                except telegram.error.Unauthorized:
+                    pass
+
+    def end_conversation(self, update, context):
+        user_id, name, username = self.common_args(update, context)
+
+        # chat type (group or private)
+        chat_type = update.message.chat.type
+
+        if chat_type == "private":
+            try:
+                # getting user info
+                data = self.record.search(user_id)
+                my_gender = data.get("gender")
+
+                if user_id not in self.chat_pair:
+                    # remove instance from list
+                    if my_gender == "🤴🏻 Boy" and user_id in self.boys:
+                        self.boys.remove(user_id)
+                    elif my_gender == "👸🏻 Girl" and user_id in self.girls:
+                        self.girls.remove(user_id)
+
+                    # user reply
+                    context.bot.send_message(chat_id=user_id, text=invalid_destroy())
                 else:
-                    print(sel[0])
-                    print(message.from_user.id)
-                    mark2 = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-                    mark2.add('❌ Exit')
-                    add_second_user(first_id=sel[0], second_id=message.from_user.id)
-                    user_info = get_info(user_id=sel[0])
-                    accmsg = "nama = {}\nUmur = {}\nJenis kelamin = {}"
-                    kollot = accmsg.format(user_info[2], user_info[3], user_info[4])
-                    bot.send_message(message.from_user.id,
-                          f"⚠️*Pasangan Di Temukan*\n{kollot}", parse_mode="markdown",
-                          reply_markup=mark2)
-                    user_info = get_info(user_id=message.from_user.id)
-                    accmsg = "nama = {}\nUmur = {}\nJenis kelamin = {}"
-                    msg = accmsg.format(user_info[2], user_info[3], user_info[4])
-                    bot.send_message(sel[0],
-                          f"⚠️*Pasangan Di Temukan*\n{msg}", parse_mode="markdown",
-                          reply_markup=mark2)
-                    success = True
-                    break
-        if not success:
-            time.sleep(2)
-            search_partner(message)
-        else:
-            bot.register_next_step_handler(message, chat)
-    
-   except:
-        welcome(message)
+                    partner_id = self.chat_pair.get(user_id)
 
-def chat(message):  
-    if message.text == "❌ Exit" or message.text == "/exit":
-        mark1 = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        mark1.add('🔍 Cari Pasangan')
-        mark1.add('📰 Info Profile', '🗑 Hapus Profile')
-        companion = check_companion(first_id=message.from_user.id)
-        bot.send_message(message.from_user.id, "_Kamu Meninggalkan Obrolan_",parse_mode="markdown", reply_markup=mark1)
-        bot.send_message(companion, "_Pasangan kamu Meninggalkan Percakapan_", parse_mode="markdown", reply_markup=mark1)
-        close_chat(first_id=message.from_user.id)
-        welcome(message)
-        return
+                    # update chat pair
+                    del self.chat_pair[user_id]
+                    del self.chat_pair[partner_id]
 
-    elif not check_open(first_id=message.from_user.id)[0][0]:
-        welcome(message)
-        return
-    companion = check_companion(first_id=message.from_user.id)
-    if message.sticker:
-        bot.send_sticker(
-                    companion, 
-                    message.sticker.file_id
-                )
-    elif message.photo:
-        file_id = None
-        
-        for item in message.photo:
-            file_id = item.file_id
-        bot.send_photo(
-                    companion, file_id, 
-                    caption=message.caption
-                )
-    elif message.video:
-        bot.send_video(
-                    companion,
-                    message.video.file_id,
-                    caption=message.caption,
-                )
-    elif message.audio:
-        bot.send_audio(
-                    companion,
-                    message.audio.file_id,
-                    caption=message.caption,
-                )
-    elif message.voice:
-        bot.send_voice(
-                    companion, 
-                    message.voice.file_id
-                )
-    elif message.animation:
-        bot.send_animation(
-                    companion, 
-                    message.animation.file_id
-                )
-    elif message.text:
-        if (
-            message.text != "/start"
-            and message.text != "/exit"
-        ):
-            if message.reply_to_message is None:
-                bot.send_message(companion, message.text)
+                    context.bot.send_message(chat_id=user_id, text=destroy(who="You"))
+                    context.bot.send_message(chat_id=partner_id, text=destroy(who="Your"))
 
-            elif message.from_user.id != message.reply_to_message.from_user.id:
-                bot.send_message(
-                            companion,
-                            message.text,
-                            reply_to_message_id=message.reply_to_message.message_id - 1,
-                           )
-            else:
-                bot.send_message(message.chat.id, "Anda tidak bisa membalas ke pesan anda sendiri")
+            # if user stop the bot
+            except telegram.error.Unauthorized:
+                pass
 
-    bot.register_next_step_handler(message, chat)
+    def message_handler(self, update, context):
+        user_id, name, username = self.common_args(update, context)
 
-           
+        # chat type (group or private)
+        chat_type = update.message.chat.type
 
-print("BOT SUDAH SIAP")
-bot.polling()
+        if chat_type == "private":
+            try:
+                if user_id in self.chat_pair:
+                    partner_id = self.chat_pair.get(user_id)
+                    msg = update.message.text
+                    if update.message.text:
+                        # Typing Action
+                        context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.TYPING, timeout=1)
+                        context.bot.send_message(chat_id=partner_id, text=msg)
+                else: 
+                    invalid_destroy()
+
+            # if user stop the bot
+            except telegram.error.Unauthorized:
+                self.end_conversation(update, context)
+
+    def media_handler(self, update, context):
+        # print(update)
+        user_id, name, username = self.common_args(update, context)
+
+        # chat type (group or private)
+        chat_type = update.message.chat.type
+
+        if chat_type == "private":
+            try:
+                if user_id in self.chat_pair:
+                    partner_id = self.chat_pair.get(user_id)
+                    caption = update.message.caption
+                    if update.message.text:
+                        # Typing Action
+                        context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.TYPING, timeout=1)
+                        context.bot.send_message(chat_id=partner_id, text=update.message.text)
+
+                    if update.message.sticker:
+                        # sticker send action
+                        context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.CHOOSE_STICKER, timeout=1)
+                        context.bot.send_sticker(chat_id=partner_id, sticker=update.message.sticker)
+
+                    elif update.message.photo:
+                        # image send action
+                        context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.UPLOAD_PHOTO, timeout=1)
+                        if caption:
+                            context.bot.send_photo(chat_id=partner_id, photo=update.message.photo[-1], caption=caption)
+                        else:
+                            context.bot.send_photo(chat_id=partner_id, photo=update.message.photo[-1])
+
+                    elif update.message.video:
+                        # video send action
+                        context.bot.send_chat_action(chat_id=partner_id, action=telegram.ChatAction.UPLOAD_VIDEO)
+                        if caption:
+                            context.bot.send_video(chat_id=partner_id, video=update.message.video, caption=caption)
+                        else:
+                            context.bot.send_video(chat_id=partner_id, video=update.message.video)
+
+                    elif update.message.video_note:
+                        # video note send action
+                        context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.RECORD_VIDEO_NOTE, timeout=1)
+                        context.bot.send_video_note(chat_id=partner_id, video_note=update.message.video_note)
+
+                    elif update.message.voice:
+                        # voice send action
+                        context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.RECORD_VOICE, timeout=1)
+                        context.bot.send_voice(chat_id=partner_id, voice=update.message.voice)
+
+                    elif update.message.audio:
+                        # audio send action
+                        context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.UPLOAD_AUDIO, timeout=1)
+                        context.bot.send_audio(chat_id=partner_id, audio=update.message.audio)
+
+                    elif update.message.document:
+                        # document send action
+                        context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.UPLOAD_DOCUMENT, timeout=1)
+                        context.bot.send_document(chat_id=partner_id, document=update.message.document)
+                else:
+                    invalid_destroy()
+            # if user stop the bot
+            except telegram.error.Unauthorized:
+                self.end_conversation(update, context)
+
+    def button_handler(self, update, context):
+        """Parses the CallbackQuery and updates the message text."""
+        query = update.callback_query
+        query.answer()
+
+        # chat info
+        user_id = update.callback_query.message.chat.id
+        chat_type = update.callback_query.message.chat.type
+
+        if chat_type == "private":
+            if "SetMine" in query.data:
+                data = self.record.search(user_id)
+
+                my_gender = data.get("gender")
+
+                reply_markup = InlineKeyboardMarkup([
+                    [InlineKeyboardButton(text="🤴🏻 Boy", callback_data=f'SetBoy_M')],
+                    [InlineKeyboardButton(text="👸🏻 Girl", callback_data=f'SetGirl_M')],
+                ])
+
+                query.edit_message_text(text=f"Select your gender\nCurrent: {my_gender}", reply_markup=reply_markup)
+
+            elif "SetPartner" in query.data:
+                data = self.record.search(user_id)
+
+                partner_gender = data.get("partner_gender")
+
+                reply_markup = InlineKeyboardMarkup([
+                    [InlineKeyboardButton(text="🤴🏻 Boy", callback_data=f'SetBoy_P')],
+                    [InlineKeyboardButton(text="👸🏻 Girl", callback_data=f'SetGirl_P')],
+                ])
+
+                query.edit_message_text(text=f"Select partner gender\nCurrent: {partner_gender}",
+                                        reply_markup=reply_markup)
+
+            elif "SetBoy" in query.data:
+                # checking request for user or partner
+                if str(query.data).split("_")[1] == "M":
+                    new_data = {"gender": "🤴🏻 Boy"}
+                else:
+                    new_data = {"partner_gender": "🤴🏻 Boy"}
+
+                # update user info
+                self.record.update(user_id, new_data)
+
+                data = self.record.search(user_id)
+                my_gender = data.get("gender")
+                partner_gender = data.get("partner_gender")
+
+                reply_markup = InlineKeyboardMarkup([
+                    [InlineKeyboardButton(text="👤 Your Gender", callback_data=f'SetMine')],
+                    [InlineKeyboardButton(text="🗣️ Partner's Gender", callback_data=f'SetPartner')],
+                ])
+
+                query.edit_message_text(
+                    text=f"Edit your gender or your partner's gender\nyou: {my_gender}\npartner: {partner_gender}",
+                    reply_markup=reply_markup)
+
+            elif "SetGirl" in query.data:
+                # checking request for user or partner
+                if str(query.data).split("_")[1] == "M":
+                    new_data = {"gender": "👸🏻 Girl"}
+                else:
+                    new_data = {"partner_gender": "👸🏻 Girl"}
+
+                # update user info
+                self.record.update(user_id, new_data)
+
+                data = self.record.search(user_id)
+                my_gender = data.get("gender")
+                partner_gender = data.get("partner_gender")
+
+                reply_markup = InlineKeyboardMarkup([
+                    [InlineKeyboardButton(text="👤 Your Gender", callback_data=f'SetMine')],
+                    [InlineKeyboardButton(text="🗣️ Partner's Gender", callback_data=f'SetPartner')],
+                ])
+
+                query.edit_message_text(
+                    text=f"Edit your gender or your partner's gender\nyou: {my_gender}\npartner: {partner_gender}",
+                    reply_markup=reply_markup)
+
+    def sharelink(self, update, context):
+        user_id, name, username = self.common_args(update, context)
+
+        # chat type (group or private)
+        chat_type = update.message.chat.type
+
+        if chat_type == "private":
+            try:
+                if user_id not in self.chat_pair:
+                    # Typing Action
+                    context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
+                    context.bot.send_message(chat_id=user_id, text=invalid_destroy())
+                else:
+                    partner_id = self.chat_pair.get(user_id)
+
+                    if username is not None:
+                        context.bot.send_message(chat_id=user_id, text=f"Profile shared")
+                        context.bot.send_message(chat_id=partner_id, text=f"@{username}")
+                    else:
+                        context.bot.send_message(chat_id=user_id, text=f"Error: Username not found")
+
+            # if user stop the bot
+            except telegram.error.Unauthorized:
+                self.end_conversation(update, context)
+
+    def command_handler(self):
+        updater = Updater(self.bot_key, use_context=True)
+
+        dp = updater.dispatcher
+
+        dp.add_handler(CommandHandler("start", self.start, run_async=True))
+        dp.add_handler(CommandHandler("help", self.help, run_async=True))
+        dp.add_handler(CommandHandler("setsex", self.settings, run_async=True))
+        dp.add_handler(CommandHandler("setinfo", helper.old, run_async=True))
+
+        dp.add_handler(CommandHandler("next", self.find_partner, run_async=True))
+        dp.add_handler(CommandHandler("stop", self.end_conversation, run_async=True))
+
+        dp.add_handler(CommandHandler("sharelink", self.sharelink, run_async=True))
+
+        dp.add_handler(MessageHandler(Filters.all, self.media_handler, run_async=True))
+        dp.add_handler(CallbackQueryHandler(self.button_handler, run_async=True))
+
+        updater.start_polling()
+        updater.idle()
+
+
+if __name__ == '__main__':
+    bot_name = "One Night Stand"
+    bot_key = config.bot_token
+    api_id = config.api_id
+    api_hash = config.api_hash
+
+    ChatBot(api_id, api_hash, bot_name, bot_key)
