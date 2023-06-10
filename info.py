@@ -16,15 +16,6 @@ Commands
 
 """
 
-def age_user():
-    return "your age?"
-
-def domisili_user():
-    return "where you from?"
-
-def wrong_name():
-    return "_Gunakan angka, Bukan Huruf!!_"
-
 def partner_match(gender):
     if gender == "Boy":
         partner = "🤴🏻 Boy"
