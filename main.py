@@ -86,68 +86,6 @@ class ChatBot:
             except telegram.error.Unauthorized:
                 pass
 
-    def age(self, update, message):
-        user_id, name, username = self.common_args(update, message)
-
-        # chat type (group or private)
-        chat_type = update.message.chat.type
-
-        if chat_type == "private":
-            try:
-                update.message.reply_text(text=age_user())
-                self.domisili(update, message)
-            # if user stop the bot
-            except telegram.error.Unauthorized:
-                pass
-
-    def domisili(self, update, message):
-        user_id, name, username = self.common_args(update, message)
-
-        # chat type (group or private)
-        chat_type = update.message.chat.type
-
-        if chat_type == "private":
-            try:
-                text = message.text
-                if not text.isdigit():
-                    update.message.reply_text(text=wrong_name(), parse_mode="markdown")
-                    self.age(update, message)
-                    return
-
-                update.message.reply_text(text=domisili_user())
-                new_data = {"old": {text}}
-                self.record.update(user_id, new_data)
-                self.lol(update, message)
-            # if user stop the bot
-            except telegram.error.Unauthorized:
-                pass
-
-    def lol(self, update, message):
-        user_id, name, username = self.common_args(update, message)
-
-        # chat type (group or private)
-        chat_type = message.chat.type
-
-        if chat_type == "private":
-            try:
-                text = message.text
-                new_data = {"domisili": {text}}
-                self.record.update(user_id, new_data)
-
-                data = self.record.search(user_id)
-
-                my_gender = data.get("gender")
-                partner_gender = data.get("partner_gender")
-                my_old = data.get("old")
-                my_dom = data.get("domisili")
-                my_name = data.get("name")
-
-                update.message.reply_text(
-                    text=f"Your name: {my_name}\nyour age: {my_old}\nyour domisili: {my_dom}\n\nEdit your gender or your partner's gender\nyou: {my_gender}\npartner: {partner_gender}")
-
-            except telegram.error.Unauthorized:
-                pass
-
     def settings(self, update, context):
         user_id, name, username = self.common_args(update, context)
 
@@ -521,8 +459,6 @@ class ChatBot:
         dp.add_handler(CommandHandler("start", self.start, run_async=True))
         dp.add_handler(CommandHandler("help", self.help, run_async=True))
         dp.add_handler(CommandHandler("setsex", self.settings, run_async=True))
-        dp.add_handler(CommandHandler("setinfo", self.age, run_async=True))
-
 
         dp.add_handler(CommandHandler("next", self.find_partner, run_async=True))
         dp.add_handler(CommandHandler("stop", self.end_conversation, run_async=True))
