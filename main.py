@@ -159,18 +159,37 @@ class ChatBot:
         self.chat_pair.update({user_id: partner})
         self.chat_pair.update({partner: user_id})
 
-        if gender1:
+        if gender1 == "boy":
+            my_old = data.get("old")
+            my_dom = data.get("domisili")
+            my_name = data.get("name")
+        elif gender1 == "girl":
             my_old = data.get("old")
             my_dom = data.get("domisili")
             my_name = data.get("name")
 
-        if gender2:
+        if gender2 == "boy":
+            my_olddi = data.get("old")
+            my_dommi = data.get("domisili")
+            my_nameei = data.get("name")
+        elif gender2 == "girl":
             my_olddi = data.get("old")
             my_dommi = data.get("domisili")
             my_nameei = data.get("name")
 
-        context.bot.send_message(chat_id=user_id, text=f"*find your partner*\n\nname: {my_name}\nage: {my_old}\ntempat tinggal: {my_dom}\ngender:{gender1}\n\n/next — find a new partner\n/stop — stop this dialog", parse_mode='Markdown')
-        context.bot.send_message(chat_id=partner, text=f"*find your partner*\n\nname: {my_nameei}\nage: {my_olddi}\ntempat tinggal: {my_dommi}\ngender:{gender2}\n\n/next — find a new partner\n/stop — stop this dialog", parse_mode='Markdown')
+        if gender1 == "Boy":
+            partner = "🤴🏻 Boy"
+        else:
+            partner = "👸🏻 Girl"
+
+        if gender2 == "Boy":
+            partner = "🤴🏻 Boy"
+        else:
+            partner = "👸🏻 Girl"
+
+
+        context.bot.send_message(chat_id=user_id, text=f"*find your partner*\n\nname: {my_name}\nage: {my_old}\ntempat tinggal: {my_dom}\ngender: {gender1}\n\n/next — find a new partner\n/stop — stop this dialog", parse_mode='Markdown')
+        context.bot.send_message(chat_id=partner, text=f"*find your partner*\n\nname: {my_nameei}\nage: {my_olddi}\ntempat tinggal: {my_dommi}\ngender: {gender2}\n\n/next — find a new partner\n/stop — stop this dialog", parse_mode='Markdown')
 
     def find_partner(self, update, context):
         user_id, name, username = self.common_args(update, context)
