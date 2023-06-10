@@ -9,7 +9,8 @@ Commands
 /start - start the bot
 /next — find a new partner
 /stop — stop this dialog
-/settings - settings menu
+/setsex - set your gender and partner sex
+/setinfo - set your age and domisili
 /sharelink - share profile to partner
 /report - Report a message
 /help - show the guide
@@ -18,18 +19,6 @@ Commands
 
 def age_user():
     return "settings di @testeronsbot"
-
-
-def partner_match(gender):
-    if gender == "Boy":
-        partner = "🤴🏻 Boy"
-    else:
-        partner = "👸🏻 Girl"
-
-    return f"""Partner: {partner}
-/next — find a new partner
-/stop — stop this dialog"""
-
 
 def partner_not_found():
     return """🔎 Searching for a partner"""
