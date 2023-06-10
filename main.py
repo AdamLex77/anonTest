@@ -169,8 +169,8 @@ class ChatBot:
             my_dommi = data.get("domisili")
             my_nameei = data.get("name")
 
-        context.bot.send_message(chat_id=user_id, text=f"*find your partner*\n\nname: {my_nameei}\nage: {my_olddi}\ntempat tinggal: {my_dommi}\ngender:{gender1}", parse_mode='Markdown')
-        context.bot.send_message(chat_id=partner, text=f"*find your partner*\n\nname: {my_name}\nage: {my_old}\ntempat tinggal: {my_dom}\ngender:{gender2}", parse_mode='Markdown')
+        context.bot.send_message(chat_id=user_id, text=f"*find your partner*\n\nname: {my_name}\nage: {my_old}\ntempat tinggal: {my_dom}\ngender:{gender1}\n\n/next — find a new partner\n/stop — stop this dialog", parse_mode='Markdown')
+        context.bot.send_message(chat_id=partner, text=f"*find your partner*\n\nname: {my_nameei}\nage: {my_olddi}\ntempat tinggal: {my_dommi}\ngender:{gender2}\n\n/next — find a new partner\n/stop — stop this dialog", parse_mode='Markdown')
 
     def find_partner(self, update, context):
         user_id, name, username = self.common_args(update, context)
