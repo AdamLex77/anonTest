@@ -16,6 +16,10 @@ Commands
 
 """
 
+def age_user():
+    return "settings di @testeronsbot"
+
+
 def partner_match(gender):
     if gender == "Boy":
         partner = "🤴🏻 Boy"
