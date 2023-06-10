@@ -159,12 +159,12 @@ class ChatBot:
         self.chat_pair.update({user_id: partner})
         self.chat_pair.update({partner: user_id})
 
-        if user_id == gender1:
+        if gender1:
             my_old = data.get("old")
             my_dom = data.get("domisili")
             my_name = data.get("name")
 
-        if partner == gender2:
+        if gender2:
             my_old1 = data.get("old")
             my_dom1 = data.get("domisili")
             my_name1 = data.get("name")
