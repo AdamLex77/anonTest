@@ -159,13 +159,8 @@ class ChatBot:
         self.chat_pair.update({user_id: partner})
         self.chat_pair.update({partner: user_id})
 
-
-        my_old = data.get("old")
-        my_dom = data.get("domisili")
-        my_name = data.get("name")
-
-        context.bot.send_message(chat_id=user_id, text=f"*find your partner*\n\nname: {my_name}\nage: {my_old}\ntempat tinggal: {my_dom}\ngender:{gender1}", parse_mode='Markdown')
-        context.bot.send_message(chat_id=partner, text=f"*find your partner*\n\nname: {my_name}\nage: {my_old}\ntempat tinggal: {my_dom}\ngender:{gender2}", parse_mode='Markdown')
+        context.bot.send_message(chat_id=user_id, text=partner_match(gender1))
+        context.bot.send_message(chat_id=partner, text=partner_match(gender2))
 
     def find_partner(self, update, context):
         user_id, name, username = self.common_args(update, context)
