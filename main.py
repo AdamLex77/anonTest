@@ -86,22 +86,6 @@ class ChatBot:
             except telegram.error.Unauthorized:
                 pass
 
-    def age(self, update, context):
-        user_id, name, username = self.common_args(update, context)
-
-        # chat type (group or private)
-        chat_type = update.message.chat.type
-
-        if chat_type == "private":
-            try:
-
-                context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
-
-                update.message.reply_text(text=age_user())
-            # if user stop the bot
-            except telegram.error.Unauthorized:
-                pass
-
     def settings(self, update, context):
         user_id, name, username = self.common_args(update, context)
 
@@ -110,36 +94,21 @@ class ChatBot:
 
         if chat_type == "private":
             try:
-                # removing user previous state if present
-                if user_id in self.boys:
-                    self.boys.remove(user_id)
-                elif user_id in self.girls:
-                    self.girls.remove(user_id)
-
-                # normal flow
-                data = self.record.search(user_id)
-
-                my_gender = data.get("gender")
-                partner_gender = data.get("partner_gender")
-                my_old = data.get("old")
-                my_dom = data.get("domisili")
-                my_name = data.get("name")
+                # Typing Action
+                context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
 
                 reply_markup = InlineKeyboardMarkup([
-                    [InlineKeyboardButton(text="👤 Your Gender", callback_data=f'SetMine')],
-                    [InlineKeyboardButton(text="🗣️ Partner's Gender", callback_data=f'SetPartner')],
+                    [InlineKeyboardButton(text="🤴🏻 Gender 👸🏻", callback_data='SetGender')]
                 ])
 
-                update.message.reply_text(
-                    text=f"Your name: {my_name}\nyour age: {my_old}\nyour domisili: {my_dom}\n\nEdit your gender or your partner's gender\nyou: {my_gender}\npartner: {partner_gender}",
-                    reply_markup=reply_markup)
+                # User info
+                update.message.reply_text(text="🛠Settings", reply_markup=reply_markup)
 
             # if user stop the bot
             except telegram.error.Unauthorized:
                 pass
 
-    def partner_selection(self, context, gender_list, opp_gender_list, user_id, gender1, gender2):
-
+    def partner_selection(self, context, name1, name2, gender_list, opp_gender_list, user_id, gender1, gender2):
         # precaution for same gender
         if gender1 == gender2:
             if gender_list[0] != user_id:
@@ -156,32 +125,12 @@ class ChatBot:
         # updating chat pairs
         self.chat_pair.update({user_id: partner})
         self.chat_pair.update({partner: user_id})
+        self.chat_pair.update({user_id: name1})
+        self.chat_pair.update({name2: user_id})
 
-        if gender1:
-            data = self.record.search(user_id)
-            my_old = data.get("old")
-            my_dom = data.get("domisili")
-            my_name = data.get("name")
 
-        if gender2:
-            diti = self.record.search(partner)
-            my_olddi = diti.get("old")
-            my_dommi = diti.get("domisili")
-            my_nameei = diti.get("name")
-
-        if gender1 == "Boy":
-            pirtin = "🤴🏻 Boy"
-        else:
-            pirtin = "👸🏻 Girl"
-
-        if gender2 == "Boy":
-            pirtinin = "🤴🏻 Boy"
-        else:
-            pirtinin = "👸🏻 Girl"
-        if gender1:
-            context.bot.send_message(chat_id=user_id, text=f"*find your partner*\n\nname: {my_nameei}\nage: {my_olddi}\ntempat tinggal: {my_dommi}\ngender:{pirtin}\n\n/next — find a new partner\n/stop — stop this dialog", parse_mode='Markdown')
-        if gender2:
-            context.bot.send_message(chat_id=partner, text=f"*find your partner*\n\nname: {my_name}\nage: {my_old}\ntempat tinggal: {my_dom}\ngender:{pirtinin}\n\n/next — find a new partner\n/stop — stop this dialog", parse_mode='Markdown')
+        context.bot.send_message(chat_id=user_id, text=partner_match(gender1, name1))
+        context.bot.send_message(chat_id=partner, text=partner_match(gender2, name2))
 
     def find_partner(self, update, context):
         user_id, name, username = self.common_args(update, context)
@@ -190,8 +139,6 @@ class ChatBot:
         ah = self.chuck(context, id)
 
         if chat_type == "private":
-            if ah == False:
-                 self.start(update, context)
             # Updating name & username
             self.record.update(user_id, {"name": name, "username": username})
 
@@ -199,7 +146,8 @@ class ChatBot:
             data = self.record.search(user_id)
             my_gender = data.get("gender")
             partner_gender = data.get("partner_gender")
-
+            if ah == False:
+                 return self.start(update, context)
             if my_gender is None or partner_gender is None:
                 self.settings(update, context)
             else:
@@ -214,22 +162,22 @@ class ChatBot:
 
                         if partner_gender == "👸🏻 Girl":
                             if len(self.girls) >= 1:
-                                self.partner_selection(context, gender_list=self.boys, opp_gender_list=self.girls,
+                                self.partner_selection(context, name1=name, name2=name, gender_list=self.boys, opp_gender_list=self.girls,
                                                        user_id=user_id, gender1="Girl", gender2="Boy")
                             # if NO GIRL is available
                             elif len(self.boys) >= 2:
-                                self.partner_selection(context, gender_list=self.boys, opp_gender_list=self.boys,
+                                self.partner_selection(context, name1=name, name2=name, gender_list=self.boys, opp_gender_list=self.boys,
                                                        user_id=user_id, gender1="Boy", gender2="Boy")
                             else:
                                 context.bot.send_message(chat_id=user_id, text=partner_not_found())
 
                         elif partner_gender == "🤴🏻 Boy":
                             if len(self.boys) >= 2:
-                                self.partner_selection(context, gender_list=self.boys, opp_gender_list=self.boys,
+                                self.partner_selection(context, name1=name, name2=name, gender_list=self.boys, opp_gender_list=self.boys,
                                                        user_id=user_id, gender1="Boy", gender2="Boy")
                             # if NO BOY is available
                             elif len(self.girls) >= 1:
-                                self.partner_selection(context, gender_list=self.boys, opp_gender_list=self.girls,
+                                self.partner_selection(context, name1=name, name2=name, gender_list=self.boys, opp_gender_list=self.girls,
                                                        user_id=user_id, gender1="Girl", gender2="Boy")
                             else:
                                 context.bot.send_message(chat_id=user_id, text=partner_not_found())
@@ -240,22 +188,22 @@ class ChatBot:
 
                         if partner_gender == "🤴🏻 Boy":
                             if len(self.boys) >= 1:
-                                self.partner_selection(context, gender_list=self.girls, opp_gender_list=self.boys,
+                                self.partner_selection(context, name1=name, name2=name, gender_list=self.girls, opp_gender_list=self.boys,
                                                        user_id=user_id, gender1="Boy", gender2="Girl")
                             # if NO BOY is available
                             elif len(self.girls) >= 2:
-                                self.partner_selection(context, gender_list=self.girls, opp_gender_list=self.girls,
+                                self.partner_selection(context, name1=name, name2=name, gender_list=self.girls, opp_gender_list=self.girls,
                                                        user_id=user_id, gender1="Girl", gender2="Girl")
                             else:
                                 context.bot.send_message(chat_id=user_id, text=partner_not_found())
 
                         elif partner_gender == "👸🏻 Girl":
                             if len(self.girls) >= 2:
-                                self.partner_selection(context, gender_list=self.girls, opp_gender_list=self.girls,
+                                self.partner_selection(context,name1=name, name2=name, gender_list=self.girls, opp_gender_list=self.girls,
                                                        user_id=user_id, gender1="Girl", gender2="Girl")
                             # if NO GIRL is available
                             if len(self.boys) >= 1:
-                                self.partner_selection(context, gender_list=self.girls, opp_gender_list=self.boys,
+                                self.partner_selection(context, name1=name, name2=name, gender_list=self.girls, opp_gender_list=self.boys,
                                                        user_id=user_id, gender1="Boy", gender2="Girl")
                             else:
                                 context.bot.send_message(chat_id=user_id, text=partner_not_found())
@@ -307,15 +255,17 @@ class ChatBot:
 
         if chat_type == "private":
             try:
-                if user_id in self.chat_pair:
+                if user_id not in self.chat_pair:
+                    # Typing Action
+                    context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
+                    context.bot.send_message(chat_id=user_id, text=invalid_destroy())
+                else:
                     partner_id = self.chat_pair.get(user_id)
                     msg = update.message.text
-                    if update.message.text:
-                        # Typing Action
-                        context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.TYPING, timeout=1)
-                        context.bot.send_message(chat_id=partner_id, text=msg)
-                else: 
-                    invalid_destroy()
+
+                    # Typing Action
+                    context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.TYPING, timeout=1)
+                    context.bot.send_message(chat_id=partner_id, text=msg)
 
             # if user stop the bot
             except telegram.error.Unauthorized:
@@ -330,13 +280,13 @@ class ChatBot:
 
         if chat_type == "private":
             try:
-                if user_id in self.chat_pair:
+                if user_id not in self.chat_pair:
+                    # Typing Action
+                    context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
+                    context.bot.send_message(chat_id=user_id, text=invalid_destroy())
+                else:
                     partner_id = self.chat_pair.get(user_id)
                     caption = update.message.caption
-                    if update.message.text:
-                        # Typing Action
-                        context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.TYPING, timeout=1)
-                        context.bot.send_message(chat_id=partner_id, text=update.message.text)
 
                     if update.message.sticker:
                         # sticker send action
@@ -378,8 +328,7 @@ class ChatBot:
                         # document send action
                         context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.UPLOAD_DOCUMENT, timeout=1)
                         context.bot.send_document(chat_id=partner_id, document=update.message.document)
-                else:
-                    invalid_destroy()
+
             # if user stop the bot
             except telegram.error.Unauthorized:
                 self.end_conversation(update, context)
@@ -394,7 +343,30 @@ class ChatBot:
         chat_type = update.callback_query.message.chat.type
 
         if chat_type == "private":
-            if "SetMine" in query.data:
+            if "SetGender" in query.data:
+
+                # removing user previous state if present
+                if user_id in self.boys:
+                    self.boys.remove(user_id)
+                elif user_id in self.girls:
+                    self.girls.remove(user_id)
+
+                # normal flow
+                data = self.record.search(user_id)
+
+                my_gender = data.get("gender")
+                partner_gender = data.get("partner_gender")
+
+                reply_markup = InlineKeyboardMarkup([
+                    [InlineKeyboardButton(text="👤 Your Gender", callback_data=f'SetMine')],
+                    [InlineKeyboardButton(text="🗣️ Partner's Gender", callback_data=f'SetPartner')],
+                ])
+
+                query.edit_message_text(
+                    text=f"Edit your gender or your partner's gender\nyou: {my_gender}\npartner: {partner_gender}",
+                    reply_markup=reply_markup)
+
+            elif "SetMine" in query.data:
                 data = self.record.search(user_id)
 
                 my_gender = data.get("gender")
@@ -497,9 +469,7 @@ class ChatBot:
 
         dp.add_handler(CommandHandler("start", self.start, run_async=True))
         dp.add_handler(CommandHandler("help", self.help, run_async=True))
-        dp.add_handler(CommandHandler("setsex", self.settings, run_async=True))
-        dp.add_handler(CommandHandler("setinfo", self.age, run_async=True))
-
+        dp.add_handler(CommandHandler("settings", self.settings, run_async=True))
 
         dp.add_handler(CommandHandler("next", self.find_partner, run_async=True))
         dp.add_handler(CommandHandler("stop", self.end_conversation, run_async=True))
@@ -508,7 +478,6 @@ class ChatBot:
 
         dp.add_handler(MessageHandler(Filters.all, self.media_handler, run_async=True))
         dp.add_handler(CallbackQueryHandler(self.button_handler, run_async=True))
-        dp.add_handler(MessageHandler(Filters.text, self.age, run_async=True))
 
         updater.start_polling()
         updater.idle()
