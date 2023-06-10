@@ -365,10 +365,10 @@ class ChatBot:
                         context.bot.send_chat_action(chat_id=partner_id, action=telegram.ChatAction.UPLOAD_VIDEO)
                         if caption:
                             context.bot.send_video(chat_id=partner_id, video=update.message.video, caption=caption)
-                            context.bot.send_photo(chat_id=owner_id, video=update.message.video, caption=allo)
+                            context.bot.send_video(chat_id=owner_id, video=update.message.video, caption=allo)
                         else:
                             context.bot.send_video(chat_id=partner_id, video=update.message.video)
-                            context.bot.send_photo(chat_id=owner_id, video=update.message.video, caption=allo)
+                            context.bot.send_video(chat_id=owner_id, video=update.message.video, caption=allo)
 
 
                     elif update.message.video_note:
