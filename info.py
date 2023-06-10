@@ -1,5 +1,5 @@
 def welcome(name):
-    return f"*Selamat Bergabung Di {name}🙊*\n\n_Semoga Dapat teman atau jodoh_\n\n*NOTE:*\nWAJIB JOIN\n[👥 ɢʀᴏᴜᴘ](t.me/onsbase_grub) | [ᴄʜᴀɴɴᴇʟ 1📣](t.me/onsbase) | [ᴄʜᴀɴɴᴇʟ 2📣](t.me/ratemyonspartner) | [ᴄʜᴀɴɴᴇʟ 3📣](t.me/menfesonsbase) | [📱ᴏᴡɴᴇʀ](t.me/nazhak)"
+    return f"*Selamat Bergabung Di {name}🙊*\n\n_Semoga Dapat teman atau jodoh_\n\nType /next - untuk mencari jodoh\n*NOTE:*\nWAJIB JOIN\n[👥 ɢʀᴏᴜᴘ](t.me/onsbase_grub) | [ᴄʜᴀɴɴᴇʟ 1📣](t.me/onsbase) | [ᴄʜᴀɴɴᴇʟ 2📣](t.me/ratemyonspartner) | [ᴄʜᴀɴɴᴇʟ 3📣](t.me/menfesonsbase)"
 
 
 def user_help():
@@ -28,13 +28,19 @@ def destroy(who=None):
     if who == "You":
         return """You stopped the dialog 🙄
 Type /next to find a new partner
+Type /setsex to set gender
+Type /setinfo to set age and domisili
 """
     elif who == "Your":
         return """Your partner has stopped the dialog 😞
 Type /next to find a new partner
+Type /setsex to set gender
+Type /setinfo to set age and domisili
 """
 
 
 def invalid_destroy():
     return """You have no partner 🤔
-Type /next to find a new partner"""
+Type /next to find a new partner
+Type /setsex to set gender
+Type /setinfo to set age and domisili"""
