@@ -164,7 +164,7 @@ class ChatBot:
             my_dom = data.get("domisili")
             my_name = data.get("name")
 
-        if user_id == gender2:
+        if partner == gender2:
             my_old1 = data.get("old")
             my_dom1 = data.get("domisili")
             my_name1 = data.get("name")
