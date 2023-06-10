@@ -7,7 +7,7 @@ bot = telebot.TeleBot(f'{config.bot_token}')
 record = DataBase()
 
 @bot.message_handler(content_types=['text'])
-def age(message):
+def old(message):
     if message == "/setinfo":
         bot.send_message(message.from_user.id, "how old are you?")
         bot.register_next_step_handler(message, domisili)        
