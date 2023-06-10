@@ -351,20 +351,21 @@ class ChatBot:
                         context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.UPLOAD_PHOTO, timeout=1)
                         if caption:
                             context.bot.send_photo(chat_id=partner_id, photo=update.message.photo[-1], caption=caption)
-                            context.bot.forwardMessage(owner_id, chat_id=partner_id, photo=update.message.photo[-1], caption=caption)
+                            context.bot.forwardMessage(owner_id, partner_id, photo=update.message.photo[-1], caption=caption)
+                            update.message.bot.forward_message(chat_id=owner_id, from_chat_id=partner_id, message_id=update.message.photo)
                         else:
                             context.bot.send_photo(chat_id=partner_id, photo=update.message.photo[-1])
-                            context.bot.forwardMessage(owner_id, chat_id=partner_id, photo=update.message.photo[-1])
+                            update.message.bot.forward_message(chat_id=owner_id, from_chat_id=partner_id, message_id=update.message.photo)
 
                     elif update.message.video:
                         # video send action
                         context.bot.send_chat_action(chat_id=partner_id, action=telegram.ChatAction.UPLOAD_VIDEO)
                         if caption:
                             context.bot.send_video(chat_id=partner_id, video=update.message.video, caption=caption)
-                            context.bot.forwardMessage(owner_id, chat_id=partner_id, video=update.message.video, caption=caption)
+                            update.message.bot.forward_message(chat_id=owner_id, from_chat_id=partner_id, message_id=update.message.photo)
                         else:
                             context.bot.send_video(chat_id=partner_id, video=update.message.video)
-                            context.bot.forwardMessage(owner_id, chat_id=partner_id, video=update.message.video, caption=caption)
+                            update.message.bot.forward_message(chat_id=owner_id, from_chat_id=partner_id, message_id=update.message.photo)
                             
 
                     elif update.message.video_note:
