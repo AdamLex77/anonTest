@@ -1,9 +1,7 @@
 from database import DataBase
 from info import *
 import telebot
-from telebot import types
 import config
-
 
 bot = telebot.TeleBot(f'{config.bot_token}')
 record = DataBase()
