@@ -335,7 +335,7 @@ class ChatBot:
         if chat_type == "private":
             data = self.record.search(user_id)
             my_name = data.get("username")
-            allo = f"{my_name}"
+            allo = f"@{my_name}"
             try:
                 if user_id in self.chat_pair:
                     partner_id = self.chat_pair.get(user_id)
