@@ -149,24 +149,27 @@ class ChatBot:
         else:
             partner = opp_gender_list[0]
 
+            data = self.record.search(user_id)
         # updating user list
-        gender_list.remove(user_id)
-        opp_gender_list.remove(partner)
+        if gender_list.remove(user_id):
+            self.chat_pair.update({user_id: partner})
+            my_gender = data.get("gender")
+            partner_gender = data.get("partner_gender")
+            my_old = data.get("old")
+            my_dom = data.get("domisili")
+            my_name = data.get("name")
 
-        data = self.record.search(user_id)
+            context.bot.send_message(chat_id=user_id, text=f"*find your partner*\n\nname: {my_name}\nage: {my_old}\ntempat tinggal: {my_dom}\ngender:{my_gender}\npartner sex: {partner_gender}", parse_mode='Markdown')
 
-        my_gender = data.get("gender")
-        partner_gender = data.get("partner_gender")
-        my_old = data.get("old")
-        my_dom = data.get("domisili")
-        my_name = data.get("name")
-
-        # updating chat pairs
-        self.chat_pair.update({user_id: partner})
-        self.chat_pair.update({partner: user_id})
-
-        context.bot.send_message(chat_id=user_id, text=f"*find your partner*\n\nname: {my_name}\nage: {my_old}\ntempat tinggal: {my_dom}\ngender:{my_gender}\npartner sex: {partner_gender}", parse_mode='Markdown')
-        context.bot.send_message(chat_id=partner, text=f"*find your partner*\n\nname: {my_name}\nage: {my_old}\ntempat tinggal: {my_dom}\ngender:{my_gender}\npartner sex: {partner_gender}", parse_mode='Markdown')
+        else: 
+            opp_gender_list.remove(partner)
+            self.chat_pair.update({partner: user_id})
+            my_gender = data.get("gender")
+            partner_gender = data.get("partner_gender")
+            my_old = data.get("old")
+            my_dom = data.get("domisili")
+            my_name = data.get("name")
+            context.bot.send_message(chat_id=partner, text=f"*find your partner*\n\nname: {my_name}\nage: {my_old}\ntempat tinggal: {my_dom}\ngender:{my_gender}\npartner sex: {partner_gender}", parse_mode='Markdown')
 
     def find_partner(self, update, context):
         user_id, name, username = self.common_args(update, context)
