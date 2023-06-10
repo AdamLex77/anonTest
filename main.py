@@ -153,11 +153,12 @@ class ChatBot:
         gender_list.remove(user_id)
         opp_gender_list.remove(partner)
 
+        data = self.record.search(user_id)
+
+        # updating chat pairs
         self.chat_pair.update({user_id: partner})
         self.chat_pair.update({partner: user_id})
 
-
-        data = self.record.search(user_id)
         if user_id:
             my_old = data.get("old")
             my_dom = data.get("domisili")
@@ -168,14 +169,9 @@ class ChatBot:
             my_dom1 = data.get("domisili")
             my_name1 = data.get("name")
 
-        # updating chat pairs
-        self.chat_pair.update({user_id: partner})
-        self.chat_pair.update({partner: user_id})
 
-
-
-        context.bot.send_message(chat_id=user_id, text=f"*find your partner*\n\nname: {my_name1}\nage: {my_old1}\ntempat tinggal: {my_dom1}\ngender:{gender1}", parse_mode='Markdown')
-        context.bot.send_message(chat_id=partner, text=f"*find your partner*\n\nname: {my_name}\nage: {my_old}\ntempat tinggal: {my_dom}\ngender:{gender2}", parse_mode='Markdown')
+        context.bot.send_message(user_id, text=f"*find your partner*\n\nname: {my_name1}\nage: {my_old1}\ntempat tinggal: {my_dom1}\ngender:{gender1}", parse_mode='Markdown')
+        context.bot.send_message(partner, text=f"*find your partner*\n\nname: {my_name}\nage: {my_old}\ntempat tinggal: {my_dom}\ngender:{gender2}", parse_mode='Markdown')
 
     def find_partner(self, update, context):
         user_id, name, username = self.common_args(update, context)
