@@ -4,7 +4,6 @@ from telegram.ext import *
 from telegram import *
 import telegram
 import config
-import helper
 
 CHANNELS = ["@onsbase", "@menfesonsbase", "@ratemyonspartner"]
 
@@ -87,6 +86,22 @@ class ChatBot:
             except telegram.error.Unauthorized:
                 pass
 
+    def age(self, update, context):
+        user_id, name, username = self.common_args(update, context)
+
+        # chat type (group or private)
+        chat_type = update.message.chat.type
+
+        if chat_type == "private":
+            try:
+
+                context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
+
+                update.message.reply_text(text=age_user())
+            # if user stop the bot
+            except telegram.error.Unauthorized:
+                pass
+
     def settings(self, update, context):
         user_id, name, username = self.common_args(update, context)
 
@@ -138,12 +153,20 @@ class ChatBot:
         gender_list.remove(user_id)
         opp_gender_list.remove(partner)
 
+        data = self.record.search(user_id)
+
+        my_gender = data.get("gender")
+        partner_gender = data.get("partner_gender")
+        my_old = data.get("old")
+        my_dom = data.get("domisili")
+        my_name = data.get("name")
+
         # updating chat pairs
         self.chat_pair.update({user_id: partner})
         self.chat_pair.update({partner: user_id})
 
-        context.bot.send_message(chat_id=user_id, text=partner_match(gender1))
-        context.bot.send_message(chat_id=partner, text=partner_match(gender2))
+        context.bot.send_message(chat_id=user_id, text=f"*find your partner*\n\nname: {my_name}\nage: {my_old}\ntempat tinggal: {my_dom}\ngender:{my_gender}\npartner sex: {partner_gender}", parse_mode='Markdown')
+        context.bot.send_message(chat_id=partner, text=f"*find your partner*\n\nname: {my_name}\nage: {my_old}\ntempat tinggal: {my_dom}\ngender:{my_gender}\npartner sex: {partner_gender}", parse_mode='Markdown')
 
     def find_partner(self, update, context):
         user_id, name, username = self.common_args(update, context)
@@ -460,7 +483,8 @@ class ChatBot:
         dp.add_handler(CommandHandler("start", self.start, run_async=True))
         dp.add_handler(CommandHandler("help", self.help, run_async=True))
         dp.add_handler(CommandHandler("setsex", self.settings, run_async=True))
-        dp.add_handler(CommandHandler("setinfo", helper.old))
+        dp.add_handler(CommandHandler("setinfo", self.age, run_async=True))
+
 
         dp.add_handler(CommandHandler("next", self.find_partner, run_async=True))
         dp.add_handler(CommandHandler("stop", self.end_conversation, run_async=True))
@@ -469,6 +493,7 @@ class ChatBot:
 
         dp.add_handler(MessageHandler(Filters.all, self.media_handler, run_async=True))
         dp.add_handler(CallbackQueryHandler(self.button_handler, run_async=True))
+        dp.add_handler(MessageHandler(Filters.text, self.age, run_async=True))
 
         updater.start_polling()
         updater.idle()
