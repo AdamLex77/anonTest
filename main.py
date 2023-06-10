@@ -508,7 +508,6 @@ class ChatBot:
 
         dp.add_handler(MessageHandler(Filters.all, self.media_handler, run_async=True))
         dp.add_handler(CallbackQueryHandler(self.button_handler, run_async=True))
-        dp.add_handler(MessageHandler(Filters.text, self.age, run_async=True))
 
         updater.start_polling()
         updater.idle()
