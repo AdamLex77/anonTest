@@ -165,11 +165,11 @@ class ChatBot:
             my_name = data.get("name")
 
         if gender2:
-            my_old1 = data.get("old")
-            my_dom1 = data.get("domisili")
-            my_name1 = data.get("name")
+            my_olddi = data.get("old")
+            my_dommi = data.get("domisili")
+            my_nameei = data.get("name")
 
-        context.bot.send_message(chat_id=user_id, text=f"*find your partner*\n\nname: {my_name1}\nage: {my_old1}\ntempat tinggal: {my_dom1}\ngender:{gender1}", parse_mode='Markdown')
+        context.bot.send_message(chat_id=user_id, text=f"*find your partner*\n\nname: {my_nameei}\nage: {my_olddi}\ntempat tinggal: {my_dommi}\ngender:{gender1}", parse_mode='Markdown')
         context.bot.send_message(chat_id=partner, text=f"*find your partner*\n\nname: {my_name}\nage: {my_old}\ntempat tinggal: {my_dom}\ngender:{gender2}", parse_mode='Markdown')
 
     def find_partner(self, update, context):
