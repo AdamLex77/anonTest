@@ -69,7 +69,7 @@ class ChatBot:
             if check.status == 'join':
                 pass
             else:
-                return True
+                return False
         return True
 
     def help(self, update, context):
