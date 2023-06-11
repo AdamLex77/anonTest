@@ -66,7 +66,7 @@ class ChatBot:
     def chuck(self, context, id):
         for i in CHANNELS:
             check = context.bot.get_chat_member(i, id)
-            if check.status != 'left' or 'ban':
+            if check.status != 'left' or 'Removed':
                 pass
             else:
                 return False
