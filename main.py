@@ -66,7 +66,7 @@ class ChatBot:
     def chuck(self, context, id):
         for i in CHANNELS:
             check = context.bot.get_chat_member(i, id)
-            if check.status == 'join':
+            if check.status != 'left' or 'banned':
                 pass
             else:
                 return False
@@ -194,7 +194,7 @@ class ChatBot:
         ah = self.chuck(context, id)
 
         if chat_type == "private":
-            if ah == True:
+            if ah == False:
                  self.start(update, context)
 
             else:
