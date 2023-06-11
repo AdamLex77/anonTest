@@ -207,9 +207,10 @@ class ChatBot:
         if chat_type == "private":
             if ah == False:
                  self.start(update, context)
+                 return
             if ih == False:
                  self.start(update, context)
-
+                 return
             else:
                 # Updating name & username
                 self.record.update(user_id, {"name": name, "username": username})
