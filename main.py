@@ -66,11 +66,16 @@ class ChatBot:
     def chuck(self, context, id):
         for i in CHANNELS:
             check = context.bot.get_chat_member(i, id)
-            if check.status != 'left' or 'kicked':
-                pass
-            else:
+            status = [
+                telegram.ChatMemberMember,
+                telegram.ChatMemberAdministrator,
+                telegram.ChatMemberMember
+            ]
+            if not check.status in status:
                 return False
-        return True
+            else:
+                return True            
+
 
     def help(self, update, context):
         user_id, name, username = self.common_args(update, context)
