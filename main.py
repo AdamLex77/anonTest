@@ -51,7 +51,10 @@ class ChatBot:
                 # Typing Action
                 context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
                 # User welcome
-                update.message.reply_text(text=welcome(name), parse_mode='Markdown', disable_web_page_preview=True)
+                reply_markup = InlineKeyboardMarkup([
+                    [InlineKeyboardButton(text="*TUTORIAL*", url='https://vt.tiktok.com/ZSLjSUwVC/')]
+                    ])
+                update.message.reply_text(text=welcome(name), parse_mode='Markdown', disable_web_page_preview=True, reply_markup=reply_markup)
 
                 if check_user and not check_user.get('gender') and not check_user.get('partner_gender'):
                     self.settings(update, context)
