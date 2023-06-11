@@ -194,7 +194,7 @@ class ChatBot:
         ah = self.chuck(context, id)
 
         if chat_type == "private":
-            if ah == False:
+            if ah == True:
                  self.start(update, context)
 
             else:
