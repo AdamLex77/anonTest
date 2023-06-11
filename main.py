@@ -72,6 +72,16 @@ class ChatBot:
                 return False
         return True
 
+    def chuaks(self, context, id):
+        for i in CHANNELS:
+            check = context.bot.get_chat_member(i, id)
+            if check.status != 'kicked':
+                pass
+            else:
+                return False
+        return True
+
+
     def help(self, update, context):
         user_id, name, username = self.common_args(update, context)
 
@@ -192,9 +202,12 @@ class ChatBot:
         id = user_id
         chat_type = update.message.chat.type
         ah = self.chuck(context, id)
+        ih = self.chuaks(context, id)
 
         if chat_type == "private":
             if ah == False:
+                 self.start(update, context)
+            if ih == False:
                  self.start(update, context)
 
             else:
