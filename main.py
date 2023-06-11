@@ -66,7 +66,7 @@ class ChatBot:
     def chuck(self, context, id):
         for i in CHANNELS:
             check = context.bot.get_chat_member(i, id)
-            if check.status != 'left':
+            if check.status == 'join':
                 pass
             else:
                 return False
