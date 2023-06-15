@@ -468,7 +468,7 @@ class ChatBot:
                 ])
 
                 query.edit_message_text(
-                    text=f"Edit your gender or your partner's gender\nyou: {my_gender}\npartner: {partner_gender}",
+                    text=f"Your name: {my_name}\nyour age: {my_old}\nyour domisili: {my_dom}\n\nEdit your gender or your partner's gender\nyou: {my_gender}\npartner: {partner_gender}",
                     reply_markup=reply_markup)
 
             elif "SetGirl" in query.data:
@@ -484,6 +484,9 @@ class ChatBot:
                 data = self.record.search(user_id)
                 my_gender = data.get("gender")
                 partner_gender = data.get("partner_gender")
+                my_old = data.get("old")
+                my_dom = data.get("domisili")
+                my_name = data.get("name")
 
                 reply_markup = InlineKeyboardMarkup([
                     [InlineKeyboardButton(text="👤 Your Gender", callback_data=f'SetMine')],
@@ -491,7 +494,7 @@ class ChatBot:
                 ])
 
                 query.edit_message_text(
-                    text=f"Edit your gender or your partner's gender\nyou: {my_gender}\npartner: {partner_gender}",
+                    text=f"Your name: {my_name}\nyour age: {my_old}\nyour domisili: {my_dom}\n\nEdit your gender or your partner's gender\nyou: {my_gender}\npartner: {partner_gender}",
                     reply_markup=reply_markup)
 
     def sharelink(self, update, context):
