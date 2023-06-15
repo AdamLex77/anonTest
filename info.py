@@ -18,7 +18,7 @@ Commands
 """
 
 def age_user():
-    return "settings di @testeronsbot"
+    return "settings di @testeronsbot, sementara bot mati akan dinyalakan lagi bulan depan, karena biayanya tidak ada"
 
 def partner_not_found():
     return """🔎 Searching for a partner"""
