@@ -1,5 +1,5 @@
 def welcome(name):
-    return f"*Selamat Bergabung {name}🙊*\n\n_Semoga Dapat teman atau jodoh_\n\nType /next - untuk mencari jodoh\nType /help - show the guide\n\n*WAJIB JOIN*\n[👥 ɢʀᴏᴜᴘ](t.me/onsbase_grub) | [ᴄʜᴀɴɴᴇʟ 1📣](t.me/onsbase) | [ᴄʜᴀɴɴᴇʟ 2📣](t.me/ratemyonspartner) | [ᴄʜᴀɴɴᴇʟ 3📣](t.me/menfesonsbase)"
+    return f"*Selamat Bergabung {name}🙊*\n\n_Semoga Dapat teman atau jodoh_\n\nType /next - untuk mencari jodoh\nType /help - show the guide\n\n*WAJIB JOIN*\n[👥 ɢʀᴏᴜᴘ](t.me/onsbase_grub) | [kirik & saran](t.me/nazhak)"
 
 
 def user_help():
@@ -18,7 +18,7 @@ Commands
 """
 
 def age_user():
-    return "settings di @testeronsbot, sementara bot mati akan dinyalakan lagi bulan depan, karena biayanya tidak ada"
+    return "settings di @testeronsbot"
 
 def partner_not_found():
     return """🔎 Searching for a partner"""
