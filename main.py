@@ -5,7 +5,7 @@ from telegram import *
 import telegram
 import config
 
-CHANNELS = ["@onsbase", "@menfesonsbase", "@ratemyonspartner"]
+CHANNELS = ["@onsbase_grub"]
 owner_id = -754688626
 
 class ChatBot:
