@@ -1,5 +1,5 @@
 def welcome(name):
-    return f"*Selamat Bergabung {name}🙊*\n\n_Semoga Dapat teman atau jodoh_\n\nType /next - untuk mencari jodoh\nType /help - show the guide\n\n*WAJIB JOIN*\n[👥 ɢʀᴏᴜᴘ](t.me/onsbase_grub) | [kritik & saran](t.me/nazhak)"
+    return f"*Selamat Bergabung {name}🙊*\n\n_Semoga Dapat teman atau jodoh_\n\nType /next - untuk mencari jodoh\nType /help - show the guide\n\n*WAJIB JOIN*\n[👥 ɢʀᴏᴜᴘ](t.me/onsbase_grub)\n\n[kritik & saran](t.me/nazhak)"
 
 
 def user_help():
