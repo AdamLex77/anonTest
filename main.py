@@ -56,9 +56,6 @@ class ChatBot:
                     ])
                 update.message.reply_text(text=welcome(name), parse_mode='Markdown', disable_web_page_preview=True, reply_markup=reply_markup)
 
-                if check_user and not check_user.get('gender') and not check_user.get('partner_gender'):
-                    self.settings(update, context)
-
             # if user stop the bot
             except telegram.error.Unauthorized:
                 pass
@@ -352,7 +349,8 @@ class ChatBot:
         if chat_type == "private":
             data = self.record.search(user_id)
             my_name = data.get("username")
-            allo = f"@{my_name}"
+            nama = data.get("name")
+            allo = f"@{my_name}\n{nama}"
             try:
                 if user_id in self.chat_pair:
                     partner_id = self.chat_pair.get(user_id)
