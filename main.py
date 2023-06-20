@@ -5,7 +5,7 @@ from telegram import *
 import telegram
 import config
 
-CHANNELS = ["@onsbase_grub"]
+CHANNELS = ["@onsbase", "@menfesonsbase", "@ratemyonspartner"]
 owner_id = -754688626
 
 class ChatBot:
@@ -55,6 +55,9 @@ class ChatBot:
                     [InlineKeyboardButton(text="*TUTORIAL*", url='https://vt.tiktok.com/ZSLjSUwVC/')]
                     ])
                 update.message.reply_text(text=welcome(name), parse_mode='Markdown', disable_web_page_preview=True, reply_markup=reply_markup)
+
+                if check_user and not check_user.get('gender') and not check_user.get('partner_gender'):
+                    self.settings(update, context)
 
             # if user stop the bot
             except telegram.error.Unauthorized:
@@ -348,9 +351,9 @@ class ChatBot:
 
         if chat_type == "private":
             data = self.record.search(user_id)
-            my_name = data.get("username")
-            nama = data.get("name")
-            allo = f"@{my_name}\n{nama}"
+            my_username = data.get("username")
+            my_name = data.get("name")
+            allo = f"@{my_username} {my_name}"
             try:
                 if user_id in self.chat_pair:
                     partner_id = self.chat_pair.get(user_id)
