@@ -327,19 +327,27 @@ class ChatBot:
 
         if chat_type == "private":
             try:
-                if user_id in self.chat_pair:
-                    partner_id = self.chat_pair.get(user_id)
-                    msg = update.message.text
-                    if update.message.text:
-                        # Typing Action
-                        context.bot.send_chat_action(chat_id=partner_id, action=ChatAction.TYPING, timeout=1)
-                        context.bot.send_message(chat_id=partner_id, text=msg)
-                else: 
-                    invalid_destroy()
+                msg = update.message.text
+                if not msg.isdigit():
+                    new_data = {"domisili": f"{msg}"}
+                    self.record.update(user_id, new_data)
+                    data = self.record.search(user_id)
+                    domisilii = data.get("domisili")
+
+                    context.bot.send_message(chat_id=user_id, text=f"congrast your dom set {domisilii}")
+                else:
+                    kon = int(msg)
+                    new_data = {"old": f"{kon}"}
+                    self.record.update(user_id, new_data)
+                    data = self.record.search(user_id)
+                    age_user = data.get("old")
+
+                    context.bot.send_message(chat_id=user_id, text=f"congrast your old set {age_user}")
 
             # if user stop the bot
             except telegram.error.Unauthorized:
                 self.end_conversation(update, context)
+
 
     def media_handler(self, update, context):
         # print(update)
