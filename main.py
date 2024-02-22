@@ -1,6 +1,5 @@
 from database import DataBase
 from info import *
-from telegram.ext import *
 from telegram import *
 import telegram
 import config
