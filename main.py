@@ -1,12 +1,12 @@
 from database import DataBase
 from info import *
-from telegram import *
 from telegram.ext import *
+from telegram import *
 import telegram
 import config
 
-CHANNELS = ["@onsbase, @mutual69rprl"]
-owner_id = -1001774215660
+CHANNELS = ["@onsbase", "@menfesonsbase", "@ratemyonspartner"]
+owner_id = -754688626
 
 class ChatBot:
     def __init__(self, api_id, api_hash,bot_name, bot_key):
@@ -556,6 +556,3 @@ if __name__ == '__main__':
     api_hash = config.api_hash
 
     ChatBot(api_id, api_hash, bot_name, bot_key)
-
-
-
