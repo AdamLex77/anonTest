@@ -5,8 +5,8 @@ from telegram import *
 import telegram
 import config
 
-CHANNELS = ["@onsbase", "@menfesonsbase", "@ratemyonspartner"]
-owner_id = -754688626
+CHANNELS = ["@onsbase", "@ratemyonspartner"]
+owner_id = -1001774215660
 
 class ChatBot:
     def __init__(self, api_id, api_hash,bot_name, bot_key):
