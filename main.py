@@ -550,7 +550,7 @@ class ChatBot:
 
 
 if __name__ == '__main__':
-    bot_name = "One Night Stand"
+    bot_name = "Cinta satu malam"
     bot_key = config.bot_token
     api_id = config.api_id
     api_hash = config.api_hash
