@@ -10,4 +10,4 @@ six==1.16.0
 tornado==6.2
 tzdata==2022.1
 tzlocal==4.2
-urlibe3
+urlibe3==1.26
