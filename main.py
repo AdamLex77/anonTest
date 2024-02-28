@@ -9,10 +9,6 @@ import urllib3
 CHANNELS = ["@onsbase", "@menfesonsbase", "@ratemyonspartner"]
 owner_id = -754688626
 
-c = urllib3.HTTPSConnectionPool('10.0.3.168', port=9001, cert_reqs='CERT_NONE',
-                                assert_hostname=False)
-c.request('GET', '/')
-
 class ChatBot:
     def __init__(self, api_id, api_hash,bot_name, bot_key):
         self.boys = []
