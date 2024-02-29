@@ -1,5 +1,5 @@
 def welcome(name):
-    return f"*Wellcome to One Night Stand {name}🙊*\n\n_Hopefully you will find a soul mate or new friend_\n\nType /next - for find new crush\nType /help - show the guide\n\n*MUST JOIN!!*\n[👥 ɢʀᴏᴜᴘ](https://t.me/+eCrEtyovRWpmYzFl) | [ᴄʜᴀɴɴᴇʟ 📣](t.me/onsbase)"
+    return f"*Wellcome to One Night Stand*\n\n{name}🙊*\n\n_Hopefully you will find a soul mate or new friend_\n\nType /next - for find new crush\nType /help - show the guide\n\n*MUST JOIN!!*\n[👥 ɢʀᴏᴜᴘ](https://t.me/+eCrEtyovRWpmYzFl) | [ᴄʜᴀɴɴᴇʟ 📣](t.me/onsbase)"
 
 
 def user_help():
