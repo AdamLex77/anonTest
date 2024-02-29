@@ -9,6 +9,10 @@ import urllib3
 CHANNELS = ["@onsbase"]
 owner_id = -1001774215660
 
+async def age_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text('how old are you?')
+
+
 class ChatBot:
     def __init__(self, api_id, api_hash,bot_name, bot_key):
         self.boys = []
