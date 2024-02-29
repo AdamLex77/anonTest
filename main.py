@@ -7,7 +7,8 @@ import config
 import urllib3
 
 CHANNELS = ["@onsbase"]
-owner_id = -1001774215660        
+owner_id = -1001774215660
+pictture = ["https://t.me/mabarinaje/2055"]
 
 class ChatBot:
     def __init__(self, api_id, api_hash,bot_name, bot_key):
@@ -240,6 +241,10 @@ class ChatBot:
                                     self.partner_selection(context, gender_list=self.boys, opp_gender_list=self.boys,
                                                            user_id=user_id, gender1="Boy", gender2="Boy")
                                 else:
+                                    reply_markup = InlineKeyboardMarkup([
+                    					[InlineKeyboardButton(text="*BUY MERCHANDISE*", url='https://t.me/+DIpyyRhH2WgzNmY1')]
+                    						])
+                                    context.bot.send_photo(chat_id=user_id, photo=pictture(), reply_markup=reply_markup)
                                     context.bot.send_message(chat_id=user_id, text=partner_not_found())
 
                             elif partner_gender == "🤴🏻 Boy":
@@ -251,6 +256,10 @@ class ChatBot:
                                     self.partner_selection(context, gender_list=self.boys, opp_gender_list=self.girls,
                                                            user_id=user_id, gender1="Girl", gender2="Boy")
                                 else:
+                                    reply_markup = InlineKeyboardMarkup([
+                    					[InlineKeyboardButton(text="*BUY MERCHANDISE*", url='https://t.me/+DIpyyRhH2WgzNmY1')]
+                    						])
+                                    context.bot.send_photo(chat_id=user_id, photo=pictture(), reply_markup=reply_markup)
                                     context.bot.send_message(chat_id=user_id, text=partner_not_found())
 
                         elif my_gender == "👸🏻 Girl":
@@ -266,6 +275,10 @@ class ChatBot:
                                     self.partner_selection(context, gender_list=self.girls, opp_gender_list=self.girls,
                                                            user_id=user_id, gender1="Girl", gender2="Girl")
                                 else:
+                                    reply_markup = InlineKeyboardMarkup([
+                    					[InlineKeyboardButton(text="*BUY MERCHANDISE*", url='https://t.me/+DIpyyRhH2WgzNmY1')]
+                    						])
+                                    context.bot.send_photo(chat_id=user_id, photo=pictture(), reply_markup=reply_markup)
                                     context.bot.send_message(chat_id=user_id, text=partner_not_found())
 
                             elif partner_gender == "👸🏻 Girl":
@@ -277,6 +290,10 @@ class ChatBot:
                                     self.partner_selection(context, gender_list=self.girls, opp_gender_list=self.boys,
                                                            user_id=user_id, gender1="Boy", gender2="Girl")
                                 else:
+                                    reply_markup = InlineKeyboardMarkup([
+                    					[InlineKeyboardButton(text="*BUY MERCHANDISE*", url='https://t.me/+DIpyyRhH2WgzNmY1')]
+                    						])
+                                    context.bot.send_photo(chat_id=user_id, photo=pictture(), reply_markup=reply_markup)
                                     context.bot.send_message(chat_id=user_id, text=partner_not_found())
 
                     # if user stop the bot
