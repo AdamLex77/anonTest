@@ -241,7 +241,7 @@ class ChatBot:
                                                            user_id=user_id, gender1="Boy", gender2="Boy")
                                 else:
                                     reply_markup = InlineKeyboardMarkup([
-                    					[InlineKeyboardButton(text="*BUY MERCHANDISE*", url='https://t.me/+DIpyyRhH2WgzNmY1')]
+                    					[InlineKeyboardButton(text="BUY MERCHANDISE", url='https://t.me/+DIpyyRhH2WgzNmY1')]
                     						])
                                     context.bot.send_photo(chat_id=user_id, photo="https://t.me/statusonsbase/110", reply_markup=reply_markup)
                                     context.bot.send_message(chat_id=user_id, text=partner_not_found())
@@ -256,7 +256,7 @@ class ChatBot:
                                                            user_id=user_id, gender1="Girl", gender2="Boy")
                                 else:
                                     reply_markup = InlineKeyboardMarkup([
-                    					[InlineKeyboardButton(text="*BUY MERCHANDISE*", url='https://t.me/+DIpyyRhH2WgzNmY1')]
+                    					[InlineKeyboardButton(text="BUY MERCHANDISE", url='https://t.me/+DIpyyRhH2WgzNmY1')]
                     						])
                                     context.bot.send_photo(chat_id=user_id, photo="https://t.me/statusonsbase/110", reply_markup=reply_markup)
                                     context.bot.send_message(chat_id=user_id, text=partner_not_found())
@@ -275,7 +275,7 @@ class ChatBot:
                                                            user_id=user_id, gender1="Girl", gender2="Girl")
                                 else:
                                     reply_markup = InlineKeyboardMarkup([
-                    					[InlineKeyboardButton(text="*BUY MERCHANDISE*", url='https://t.me/+DIpyyRhH2WgzNmY1')]
+                    					[InlineKeyboardButton(text="BUY MERCHANDISE", url='https://t.me/+DIpyyRhH2WgzNmY1')]
                     						])
                                     context.bot.send_photo(chat_id=user_id, photo="https://t.me/statusonsbase/110", reply_markup=reply_markup)
                                     context.bot.send_message(chat_id=user_id, text=partner_not_found())
@@ -290,7 +290,7 @@ class ChatBot:
                                                            user_id=user_id, gender1="Boy", gender2="Girl")
                                 else:
                                     reply_markup = InlineKeyboardMarkup([
-                    					[InlineKeyboardButton(text="*BUY MERCHANDISE*", url='https://t.me/+DIpyyRhH2WgzNmY1')]
+                    					[InlineKeyboardButton(text="BUY MERCHANDISE", url='https://t.me/+DIpyyRhH2WgzNmY1')]
                     						])
                                     context.bot.send_photo(chat_id=user_id, photo="https://t.me/statusonsbase/110", reply_markup=reply_markup)
                                     context.bot.send_message(chat_id=user_id, text=partner_not_found())
