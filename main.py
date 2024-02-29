@@ -7,11 +7,7 @@ import config
 import urllib3
 
 CHANNELS = ["@onsbase"]
-owner_id = -1001774215660
-
-async def age_command(update, context):
-    await update.message.reply_text('how old are you?')
-
+owner_id = -1001774215660        
 
 class ChatBot:
     def __init__(self, api_id, api_hash,bot_name, bot_key):
@@ -114,6 +110,7 @@ class ChatBot:
                 context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
 
                 update.message.reply_text(text=age_user())
+                    
             # if user stop the bot
             except telegram.error.Unauthorized:
                 pass
