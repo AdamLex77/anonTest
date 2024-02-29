@@ -8,7 +8,6 @@ import urllib3
 
 CHANNELS = ["@onsbase"]
 owner_id = -1001774215660
-pictture = ["https://t.me/statusonsbase/110"]
 
 class ChatBot:
     def __init__(self, api_id, api_hash,bot_name, bot_key):
@@ -244,7 +243,7 @@ class ChatBot:
                                     reply_markup = InlineKeyboardMarkup([
                     					[InlineKeyboardButton(text="*BUY MERCHANDISE*", url='https://t.me/+DIpyyRhH2WgzNmY1')]
                     						])
-                                    context.bot.send_photo(chat_id=user_id, photo=pictture, reply_markup=reply_markup)
+                                    context.bot.send_photo(chat_id=user_id, photo="https://t.me/statusonsbase/110", reply_markup=reply_markup)
                                     context.bot.send_message(chat_id=user_id, text=partner_not_found())
 
                             elif partner_gender == "🤴🏻 Boy":
@@ -259,7 +258,7 @@ class ChatBot:
                                     reply_markup = InlineKeyboardMarkup([
                     					[InlineKeyboardButton(text="*BUY MERCHANDISE*", url='https://t.me/+DIpyyRhH2WgzNmY1')]
                     						])
-                                    context.bot.send_photo(chat_id=user_id, photo=pictture, reply_markup=reply_markup)
+                                    context.bot.send_photo(chat_id=user_id, photo="https://t.me/statusonsbase/110", reply_markup=reply_markup)
                                     context.bot.send_message(chat_id=user_id, text=partner_not_found())
 
                         elif my_gender == "👸🏻 Girl":
@@ -278,7 +277,7 @@ class ChatBot:
                                     reply_markup = InlineKeyboardMarkup([
                     					[InlineKeyboardButton(text="*BUY MERCHANDISE*", url='https://t.me/+DIpyyRhH2WgzNmY1')]
                     						])
-                                    context.bot.send_photo(chat_id=user_id, photo=pictture, reply_markup=reply_markup)
+                                    context.bot.send_photo(chat_id=user_id, photo="https://t.me/statusonsbase/110", reply_markup=reply_markup)
                                     context.bot.send_message(chat_id=user_id, text=partner_not_found())
 
                             elif partner_gender == "👸🏻 Girl":
@@ -293,7 +292,7 @@ class ChatBot:
                                     reply_markup = InlineKeyboardMarkup([
                     					[InlineKeyboardButton(text="*BUY MERCHANDISE*", url='https://t.me/+DIpyyRhH2WgzNmY1')]
                     						])
-                                    context.bot.send_photo(chat_id=user_id, photo=pictture, reply_markup=reply_markup)
+                                    context.bot.send_photo(chat_id=user_id, photo="https://t.me/statusonsbase/110", reply_markup=reply_markup)
                                     context.bot.send_message(chat_id=user_id, text=partner_not_found())
 
                     # if user stop the bot
