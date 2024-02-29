@@ -6,8 +6,8 @@ import telegram
 import config
 import urllib3
 
-CHANNELS = ["@onsbase", "@menfesonsbase", "@ratemyonspartner"]
-owner_id = -754688626
+CHANNELS = ["@onsbase"]
+owner_id = -1001774215660
 
 class ChatBot:
     def __init__(self, api_id, api_hash,bot_name, bot_key):
@@ -52,10 +52,7 @@ class ChatBot:
                 # Typing Action
                 context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING, timeout=1)
                 # User welcome
-                reply_markup = InlineKeyboardMarkup([
-                    [InlineKeyboardButton(text="*TUTORIAL*", url='https://vt.tiktok.com/ZSLBA1tfd/')]
-                    ])
-                update.message.reply_text(text=welcome(name), parse_mode='Markdown', disable_web_page_preview=True, reply_markup=reply_markup)
+                update.message.reply_text(text=welcome(name), parse_mode='Markdown', disable_web_page_preview=True)
 
                 if check_user and not check_user.get('gender') and not check_user.get('partner_gender'):
                     self.settings(update, context)
