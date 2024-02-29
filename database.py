@@ -40,3 +40,6 @@ class DataBase:
 
     def update(self, user_id, new_data):
         self.dataset.update_one({"_id": user_id}, {"$set": new_data})
+
+    def message(self, user_id, new_data):
+        self.dataset.update_one({"_id": user_id}, {"$set": new_data})
