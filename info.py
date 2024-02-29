@@ -18,7 +18,7 @@ Commands
 """
 
 def age_user():
-    return "settings di @testeronsbot"
+    return "sfeature not yet available"
 
 def partner_not_found():
     return """🔎 Searching for a partner"""
