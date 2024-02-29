@@ -8,7 +8,7 @@ import urllib3
 
 CHANNELS = ["@onsbase"]
 owner_id = -1001774215660
-pictture = ["https://t.me/mabarinaje/2055"]
+pictture = ["https://t.me/statusonsbase/110"]
 
 class ChatBot:
     def __init__(self, api_id, api_hash,bot_name, bot_key):
