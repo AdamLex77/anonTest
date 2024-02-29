@@ -26,12 +26,10 @@ def partner_not_found():
 
 def destroy(who=None):
     if who == "You":
-        return """You stopped the dialog 🙄
+        return """Your partner has stopped the dialog 😞
 Type /next to find a new partner
-Type /setsex to set gender
-Type /setinfo to set age and domisili
 
-jangan lupa sebar sebar link @cintasatumalambot agar lebih ramai pengunannya"""
+Don't forget share link @cintasatumalambot to make more friends"""
     elif who == "Your":
         return """Your partner has stopped the dialog 😞
 Type /next to find a new partner
