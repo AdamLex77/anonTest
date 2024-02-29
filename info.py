@@ -35,16 +35,12 @@ jangan lupa sebar sebar link @cintasatumalambot agar lebih ramai pengunannya"""
     elif who == "Your":
         return """Your partner has stopped the dialog 😞
 Type /next to find a new partner
-Type /setsex to set gender
-Type /setinfo to set age and domisili
 
-jangan lupa sebar sebar link @cintasatumalambot agar lebih ramai pengunannya"""
+Don't forget share link @cintasatumalambot to make more friends"""
 
 
 def invalid_destroy():
     return """You have no partner 🤔
 Type /next to find a new partner
-Type /setsex to set gender
-Type /setinfo to set age and domisili
 
-jangan lupa sebar sebar link @cintasatumalambot agar lebih ramai pengunannya"""
+Don't forget share link @cintasatumalambot to make more friends"""
